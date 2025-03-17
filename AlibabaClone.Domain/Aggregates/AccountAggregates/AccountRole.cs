@@ -9,6 +9,6 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
     public class AccountRole
     {
         public long AccountId { get; set; }
-        public byte RoleId { get; set; }    
+        public short RoleId { get; set; }    
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AlibabaClone.Domain.Aggregates.TransportationAggregates
 {
-    public class TicketStatus : Entity<byte>
+    public class TicketStatus : Entity<short>
     {
         public string Title { get; set; }
     }

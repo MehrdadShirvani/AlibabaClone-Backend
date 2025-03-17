@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AlibabaClone.Domain.Aggregates.AccountAggregates
 {
-    public class Role : Entity<byte>
+    public class Role : Entity<short>
     {
         public required string Title { get; set; }
     }

@@ -17,7 +17,7 @@ namespace AlibabaClone.Domain.Aggregates.TransportationAggregates
         public long TravelerId { get; set; }
         public DateTime CreatedAt { get; set; }
         public long? CompanionId { get; set; }   
-        public byte TicketStatusId { get; set; }
+        public short TicketStatusId { get; set; }
         public string SerialNumber { get; protected set; }
         public string? Description { get; set; }
 

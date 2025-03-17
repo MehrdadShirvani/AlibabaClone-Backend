@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AlibabaClone.Domain.Aggregates.LocationAggregates
 {
-    public class LocationType : Entity<byte>
+    public class LocationType : Entity<short>
     {
         public required string Title { get; set; }
 

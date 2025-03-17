@@ -12,7 +12,7 @@ namespace AlibabaClone.Domain.Aggregates.LocationAggregates
     {
         public required string Title { get; set; }
         public int CityId { get; set; } 
-        public byte LocationTypeId { get; set; }   
+        public short LocationTypeId { get; set; }   
 
         public virtual City City { get; set; }
         public virtual LocationType LocationType { get; set; }
