@@ -14,13 +14,19 @@ namespace AlibabaClone.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Location> builder)
         {
-            builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id)
+            builder.HasKey(l => l.Id);
+            builder.Property(l => l.Id)
                 .ValueGeneratedOnAdd();
 
-            builder.Property(c => c.Title)
+            builder.Property(l => l.Title)
                 .IsRequired()
                 .HasMaxLength(100);
+
+            builder.Property(l => l.CityId)
+                .IsRequired();
+
+            builder.Property(l => l.LocationTypeId)
+                .IsRequired();
 
             //Relationships
             builder.HasOne(l => l.City)
