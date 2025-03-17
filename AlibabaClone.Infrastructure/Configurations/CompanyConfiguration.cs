@@ -20,7 +20,7 @@ namespace AlibabaClone.Infrastructure.Configurations
 
             builder.Property(c => c.Title)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(100);
 
             builder.HasIndex(c => c.Title)
                 .IsUnique();
