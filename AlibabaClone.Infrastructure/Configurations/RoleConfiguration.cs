@@ -19,7 +19,7 @@ namespace AlibabaClone.Infrastructure.Configurations
 
             builder.Property(r => r.Title)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasColumnType("varchar(50)");
 
             builder.HasIndex(r => r.Title)
                 .IsUnique();
