@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AlibabaClone.Application\AlibabaClone.Application.csproj" />
     <ProjectReference Include="..\AlibabaClone.Domain\AlibabaClone.Domain.csproj" />
+    <ProjectReference Include="..\AlibabaClone.Infrastructure\AlibabaClone.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
