@@ -14,20 +14,24 @@ namespace AlibabaClone.Infrastructure.Configurations
 
             builder.Property(a => a.PhoneNumber)
                 .IsRequired()
-                .HasColumnType("varchar(20)");
+                .IsUnicode(false)
+                .HasMaxLength(20);
 
             builder.Property(a => a.Password)
                 .IsRequired()
-                .HasColumnType("char(64)");
+                .IsUnicode(false)
+                .IsFixedLength(true)
+                .HasMaxLength(64);
 
             builder.Property(a => a.Email)
-                .HasColumnType("varchar(255)");
+                .IsUnicode(false)
+                .HasMaxLength(255);
 
             // Relationships
             builder.HasOne(a => a.Person)
                 .WithMany(p => p.Accounts)
                 .HasForeignKey(a => a.PersonId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
