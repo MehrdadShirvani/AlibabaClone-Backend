@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Framework\Base\" />
-    <Folder Include="Configurations\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
