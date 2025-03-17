@@ -50,4 +50,3 @@ namespace AlibabaClone.Infrastructure.Configurations
         }
     }
 }
-}

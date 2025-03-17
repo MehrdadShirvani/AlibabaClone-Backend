@@ -14,7 +14,7 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
         public required string IdNumber { get; set; }
         //TODO: need to convert this to date in configuration
         public DateTime Birthdate { get; set; } 
-        public byte GenderId { get; set; }
+        public short GenderId { get; set; }
         public string? PassportNumber { get; set; }
         public string? EnglishFirstName { get; set; }
         public string? EnglishLastName { get; set; }

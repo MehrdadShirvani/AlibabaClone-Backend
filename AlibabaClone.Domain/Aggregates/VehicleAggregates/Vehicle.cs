@@ -16,7 +16,7 @@ namespace AlibabaClone.Domain.Aggregates.VehicleAggregates
         public required string PlateNumber { get; set; }
 
         public virtual VehicleType VehicleType { get; set; }
-        public ICollection<Seat> Seats{ get; set; }
-        public ICollection<Transportation> Transportations{ get; set; }
+        public virtual ICollection<Seat> Seats{ get; set; }
+        public virtual ICollection<Transportation> Transportations{ get; set; }
     }
 }
