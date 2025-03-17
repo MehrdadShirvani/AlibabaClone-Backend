@@ -1,11 +1,6 @@
 ﻿using AlibabaClone.Domain.Aggregates.VehicleAggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AlibabaClone.Infrastructure.Configurations
 {

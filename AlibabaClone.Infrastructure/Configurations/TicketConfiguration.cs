@@ -1,11 +1,6 @@
 ﻿using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AlibabaClone.Infrastructure.Configurations
 {
@@ -45,6 +40,7 @@ namespace AlibabaClone.Infrastructure.Configurations
                 .HasMaxLength(200)
                 .IsUnicode(false);
 
+            // Relationships
             builder.HasOne(t => t.Transportation)
                 .WithMany(t => t.Tickets)
                 .HasForeignKey(t => t.TransportationId)

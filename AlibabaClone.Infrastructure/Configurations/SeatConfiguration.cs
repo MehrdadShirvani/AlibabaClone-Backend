@@ -28,6 +28,7 @@ namespace AlibabaClone.Infrastructure.Configurations
             builder.Property(s => s.Description)
                 .HasMaxLength(200);
 
+            // Relationships
             builder.HasOne(s => s.Vehicle)
                 .WithMany(v => v.Seats)
                 .HasForeignKey(s => s.VehicleId)
