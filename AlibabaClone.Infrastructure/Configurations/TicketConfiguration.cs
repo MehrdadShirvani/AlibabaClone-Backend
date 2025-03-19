@@ -52,12 +52,12 @@ namespace AlibabaClone.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.Buyer)
-                .WithMany()
+                .WithMany(a => a.BoughtTickets)
                 .HasForeignKey(t => t.BuyerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.Traveler)
-                .WithMany()
+                .WithMany(p => p.TraveledTickets)
                 .HasForeignKey(t => t.TravelerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
