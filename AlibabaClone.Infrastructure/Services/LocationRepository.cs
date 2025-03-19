@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace AlibabaClone.Infrastructure.Services
 {
-    public class LocationTypeRepository :
-        BaseRepository<ApplicationDBContext, LocationType, short>,
-        ILocationTypeRepository
+    public class LocationRepository :
+        BaseRepository<ApplicationDBContext, Location, int>,
+        ILocationRepository
     {
-        public LocationTypeRepository(ApplicationDBContext dbContext) : base(dbContext)
+        public LocationRepository(ApplicationDBContext dbContext) : base(dbContext)
         {
 
         }

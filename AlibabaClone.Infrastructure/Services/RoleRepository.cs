@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace AlibabaClone.Infrastructure.Services
 {
-    public class CompanyRepository :
-        BaseRepository<ApplicationDBContext, Company, int>,
-        ICompanyRepository
+    public class RoleRepository :
+        BaseRepository<ApplicationDBContext, Role, short>,
+        IRoleRepository
     {
-        public CompanyRepository(ApplicationDBContext dbContext) : base(dbContext)
+        public RoleRepository(ApplicationDBContext dbContext) : base(dbContext)
         {
 
         }
