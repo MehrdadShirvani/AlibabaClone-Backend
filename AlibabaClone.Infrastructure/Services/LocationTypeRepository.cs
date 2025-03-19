@@ -1,4 +1,5 @@
 ﻿using AlibabaClone.Domain.Aggregates.AccountAggregates;
+using AlibabaClone.Domain.Aggregates.LocationAggregates;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories;
 using AlibabaClone.Infrastructure.Framework.Base;
 using System;
@@ -9,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace AlibabaClone.Infrastructure.Services
 {
-    public class AccountRepository :
-        BaseRepository<ApplicationDBContext, Account, long>,
-        IAccountRepository
+    public class LocationTypeRepository :
+        BaseRepository<ApplicationDBContext, LocationType, short>,
+        ILocationTypeRepository
     {
-        public AccountRepository(ApplicationDBContext dbContext) : base(dbContext)
+        public LocationTypeRepository(ApplicationDBContext dbContext) : base(dbContext)
         {
 
         }
