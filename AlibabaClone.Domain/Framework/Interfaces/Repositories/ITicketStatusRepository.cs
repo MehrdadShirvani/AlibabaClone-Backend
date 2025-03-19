@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AlibabaClone.Domain.Framework.Interfaces.Repositories
 {
-    public interface ITicketStatusRepositry : IRepository<TicketStatus, short>
+    public interface ITicketStatusRepository : IRepository<TicketStatus, short>
     {
 
     }

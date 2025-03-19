@@ -12,7 +12,7 @@ namespace AlibabaClone.Infrastructure.Services
 {
     public class TicketStatusRepository :
         BaseRepository<ApplicationDBContext, TicketStatus, short>,
-        ITicketStatusRepositry
+        ITicketStatusRepository
     {
         public TicketStatusRepository(ApplicationDBContext dbContext) : base(dbContext)
         {
