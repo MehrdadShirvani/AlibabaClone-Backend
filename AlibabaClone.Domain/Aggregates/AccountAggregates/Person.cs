@@ -1,4 +1,5 @@
-﻿using AlibabaClone.Domain.Framework.Base;
+﻿using AlibabaClone.Domain.Aggregates.TransportationAggregates;
+using AlibabaClone.Domain.Framework.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string IdNumber { get; set; }
-        //TODO: need to convert this to date in configuration
+        
         public DateTime Birthdate { get; set; } 
         public short GenderId { get; set; }
         public string? PassportNumber { get; set; }
@@ -21,5 +22,6 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
 
         public virtual Gender Gender { get; set; }
         public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<Ticket> TraveledTickets { get; set; }
     }
 }
