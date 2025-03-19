@@ -13,5 +13,7 @@ namespace AlibabaClone.Domain.Framework.Interfaces.Repositories
         Task DeleteAsync(T_Entity entity);
         Task<List<T_Entity>> SelectAsync();
         Task<T_Entity> FindByIdAsync(U_PrimaryKey id);
+        void Update(T_Entity entity);
+        void Remove(T_Entity entity);
     }
 }

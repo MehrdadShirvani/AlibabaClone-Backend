@@ -25,6 +25,7 @@ namespace AlibabaClone.Infrastructure.Framework.Base
         {
             await DBSet.AddAsync(entity);
         }
+        
         public async Task DeleteAsync(U_PrimaryKey id)
         {
             var entityToDelete = await DBSet.FindAsync(id);
@@ -46,6 +47,14 @@ namespace AlibabaClone.Infrastructure.Framework.Base
         {
             var entityList = DBSet.ToListAsync();
             return await entityList;
+        }
+        public void Update(T_Entity entity)
+        {
+            DBSet.Update(entity);
+        }
+        public void Remove(T_Entity entity)
+        {
+            DBSet.Remove(entity);
         }
     }
 }
