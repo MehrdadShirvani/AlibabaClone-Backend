@@ -45,12 +45,12 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
 
             //Relationships
             builder.HasOne(t => t.FromLocation)
-                .WithMany()
+                .WithMany(l => l.DepartingTransportations)
                 .HasForeignKey(t => t.FromLocationId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.ToLocation)
-                .WithMany()
+                .WithMany(l => l.ArrivingTransportations)
                 .HasForeignKey(t => t.ToLocationId)
                 .OnDelete(DeleteBehavior.Restrict);
 
