@@ -18,9 +18,9 @@ namespace AlibabaClone.Domain.Aggregates.LocationAggregates
         public virtual LocationType LocationType { get; set; }
 
         // Transportations that start at this location
-        public ICollection<Transportation> DepartingTransportations { get; set; }
+        public virtual ICollection<Transportation> DepartingTransportations { get; set; }
 
         // Transportations that end at this location
-        public ICollection<Transportation> ArrivingTransportations { get; set; }
+        public virtual ICollection<Transportation> ArrivingTransportations { get; set; }
     }
 }
