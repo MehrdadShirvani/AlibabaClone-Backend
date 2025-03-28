@@ -1,5 +1,5 @@
 ﻿using AlibabaClone.Domain.Aggregates.LocationAggregates;
-using AlibabaClone.Domain.Framework.Interfaces.Repositories.LocationAggregates;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.LocationRepositories;
 using AlibabaClone.Infrastructure.Framework.Base;
 
 namespace AlibabaClone.Infrastructure.Services.AccountAggregates

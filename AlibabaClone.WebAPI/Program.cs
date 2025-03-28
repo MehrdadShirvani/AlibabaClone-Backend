@@ -1,10 +1,10 @@
 using AlibabaClone.Domain.Framework.Interfaces;
-using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountAggregates;
-using AlibabaClone.Domain.Framework.Interfaces.Repositories.CompanyAggregates;
-using AlibabaClone.Domain.Framework.Interfaces.Repositories.LocationAggregates;
-using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionAggregates;
-using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationAggregates;
-using AlibabaClone.Domain.Framework.Interfaces.Repositories.VehicleAggregates;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.CompanyRepositories;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.LocationRepositories;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationRepositories;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.VehicleRepositories;
 using AlibabaClone.Infrastructure;
 using AlibabaClone.Infrastructure.Framework.Base;
 using AlibabaClone.Infrastructure.Services.AccountAggregates;
