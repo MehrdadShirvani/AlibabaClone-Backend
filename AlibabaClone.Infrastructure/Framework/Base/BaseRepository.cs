@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,29 +22,16 @@ namespace AlibabaClone.Infrastructure.Framework.Base
             DBSet = dbContext.Set<T_Entity>();
         }
         
-        public async Task InsertAsync(T_Entity entity)
+        public async Task AddAsync(T_Entity entity)
         {
             await DBSet.AddAsync(entity);
         }
         
-        public async Task DeleteAsync(U_PrimaryKey id)
-        {
-            var entityToDelete = await DBSet.FindAsync(id);
-            DBSet.Remove(entityToDelete);
-        }
-        public async Task DeleteAsync(T_Entity entityToDelete)
-        {
-            if (DbContext.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                DBSet.Attach(entityToDelete);
-            }
-            DBSet.Remove(entityToDelete);
-        }
-        public async Task<T_Entity> FindByIdAsync(U_PrimaryKey id)
+        public async Task<T_Entity?> GetByIdAsync(U_PrimaryKey id)
         {
             return await DBSet.FindAsync(id);
         }
-        public async Task<List<T_Entity>> SelectAsync()
+        public async Task<IEnumerable<T_Entity>> GetAllAsync()
         {
             var entityList = DBSet.ToListAsync();
             return await entityList;
@@ -55,6 +43,11 @@ namespace AlibabaClone.Infrastructure.Framework.Base
         public void Remove(T_Entity entity)
         {
             DBSet.Remove(entity);
+        }
+
+        public async Task<IEnumerable<T_Entity>> FindAsync(Expression<Func<T_Entity, bool>> predicate)
+        {
+            return await DBSet.Where(predicate).ToListAsync();
         }
     }
 }
