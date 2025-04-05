@@ -15,7 +15,7 @@ namespace AlibabaClone.Infrastructure.Services.TransportationAggregates
 
         }
 
-        public async Task<List<Transportation>> SearchTransportationsAsync(int? fromCityId, int? toCityId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<Transportation>> SearchTransportationsAsync(int? fromCityId, int? toCityId, DateTime? startDate, DateTime? endDate)
         {
             var query = DbContext.Transportations.Include(x => x.FromLocation).Include(x => x.ToLocation).AsQueryable();
             
