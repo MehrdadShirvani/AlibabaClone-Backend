@@ -2,7 +2,7 @@
 {
     public class TransportationSearchResultDto
     {
-        public int Id { get; init; }
+        public long Id { get; init; }
         public string CompanyTitle { get; init; }   
         public string FromLocationTitle { get; init; }
         public string ToLocationTitle { get; init; }
