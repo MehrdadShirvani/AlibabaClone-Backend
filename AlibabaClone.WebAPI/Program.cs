@@ -1,3 +1,6 @@
+using AlibabaClone.Application.Interfaces;
+using AlibabaClone.Application.Mappers.Profiles;
+using AlibabaClone.Application.Services;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.CompanyRepositories;
@@ -13,6 +16,7 @@ using AlibabaClone.Infrastructure.Services.TransactionAggregates;
 using AlibabaClone.Infrastructure.Services.TransportationAggregates;
 using AlibabaClone.Infrastructure.Services.VehicleAggregates;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +55,11 @@ builder.Services.AddScoped<IVehicleTypeRepository, VehicleTypeRepository>();
 
 //Register Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+//Registering Services
+builder.Services.AddScoped<ITransportationService, TransportationService>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 var app = builder.Build();
