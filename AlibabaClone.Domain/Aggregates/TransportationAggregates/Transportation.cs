@@ -17,7 +17,7 @@ namespace AlibabaClone.Domain.Aggregates.TransportationAggregates
         public int CompanyId { get; set; }
         public int VehicleId { get; set; }  
         public DateTime StartDateTime { get; set; } 
-        public DateTime EndDateTime { get; set; }
+        public DateTime? EndDateTime { get; set; }
         public string SerialNumber { get; protected set; }
         public int RemainingCapacity { get; protected set; }
         public decimal BasePrice { get; set; }
