@@ -4,11 +4,6 @@ using AlibabaClone.Application.Result;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationRepositories;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AlibabaClone.Application.Services
 {
@@ -34,6 +29,7 @@ namespace AlibabaClone.Application.Services
        toCityId: searchRequest.ToCityId,
        startDate: searchRequest.StartDate,
        endDate: searchRequest.EndDate);
+            
 
             if (result.Any())
             {
