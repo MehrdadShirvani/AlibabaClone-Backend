@@ -26,7 +26,7 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
                 .IsRequired();
 
             builder.Property(t => t.EndDateTime)
-                .IsRequired();
+                .IsRequired(false);
 
             builder.Property(t => t.SerialNumber)
                 .IsRequired()
