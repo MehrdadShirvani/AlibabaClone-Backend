@@ -16,11 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="DTOs\" />
-    <Folder Include="Mappers\" />
     <Folder Include="Validators\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
