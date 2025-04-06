@@ -58,6 +58,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Registering Services
 builder.Services.AddScoped<ITransportationService, TransportationService>();
+builder.Services.AddScoped<ICityService, CityService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
