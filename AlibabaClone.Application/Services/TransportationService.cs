@@ -25,11 +25,12 @@ namespace AlibabaClone.Application.Services
         public async Task<Result<IEnumerable<TransportationSearchResultDto>>> SearchTransportationsAsync(TransportationSearchRequestDto searchRequest)
         {
             var result = await _transportationRepository.SearchTransportationsAsync(
+       vehicleTypeId: searchRequest.VehicleTypeId,
        fromCityId: searchRequest.FromCityId,
        toCityId: searchRequest.ToCityId,
        startDate: searchRequest.StartDate,
        endDate: searchRequest.EndDate);
-            
+
 
             if (result.Any())
             {
@@ -37,7 +38,7 @@ namespace AlibabaClone.Application.Services
                 return Result<IEnumerable<TransportationSearchResultDto>>.Success(transportationsDto);
             }
 
-            return Result<IEnumerable<TransportationSearchResultDto>>.NotFound(null); 
+            return Result<IEnumerable<TransportationSearchResultDto>>.NotFound(null);
         }
     }
 }
