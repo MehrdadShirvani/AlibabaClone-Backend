@@ -16,7 +16,6 @@ using AlibabaClone.Infrastructure.Services.TransactionAggregates;
 using AlibabaClone.Infrastructure.Services.TransportationAggregates;
 using AlibabaClone.Infrastructure.Services.VehicleAggregates;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +61,15 @@ builder.Services.AddScoped<ICityService, CityService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
