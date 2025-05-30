@@ -14,6 +14,11 @@ namespace AlibabaClone.Infrastructure.Services.AccountAggregates
 
         }
 
+
+        public async Task AddAccountRoleAsync(AccountRole accountRole)
+        {
+            await DbContext.AccountRoles.AddAsync(accountRole);
+        }
         public async Task<Account> GetByPhoneNumberAsync(string phoneNumber)
         {
             var user = await DbContext.Accounts.Include(x => x.AccountRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
