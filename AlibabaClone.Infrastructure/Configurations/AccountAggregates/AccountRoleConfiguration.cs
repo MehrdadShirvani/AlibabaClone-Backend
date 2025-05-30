@@ -11,12 +11,12 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
             builder.HasKey(ar => new { ar.RoleId, ar.AccountId });
 
             // Relationships
-            builder.HasOne<Account>()
-                .WithMany()
+            builder.HasOne<Account>(ar => ar.Account)
+                .WithMany(a => a.AccountRoles)
                 .HasForeignKey(ar => ar.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<Role>()
+            builder.HasOne<Role>(ar => ar.Role)
                 .WithMany()
                 .HasForeignKey(ar => ar.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
