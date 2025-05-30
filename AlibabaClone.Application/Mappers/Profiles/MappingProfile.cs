@@ -21,9 +21,10 @@ namespace AlibabaClone.Application.Mappers.Profiles
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.BasePrice));
 
             CreateMap<City, CityDto>();
-            CreateMap<Account, AccountDTO>()
-                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.AccountRoles.Select(x=>x.Role.Title)))
-                .ReverseMap();
+            CreateMap<Account, AccountDto>()
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.AccountRoles.Select(x=>x.Role.Title)));
+            CreateMap<AccountDto, Account>() 
+            .ForMember(dest => dest.AccountRoles, opt => opt.Ignore());
         }
     }
 }
