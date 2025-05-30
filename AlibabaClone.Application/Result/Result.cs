@@ -14,7 +14,7 @@ namespace AlibabaClone.Application.Result
         public bool IsSuccess => Status == ResultStatus.Success;
 
         public static Result<T> Success(T data) => new() { Status = ResultStatus.Success, Data = data };
-        public static Result<T> Error(T data) => new() { Status = ResultStatus.Error, Data = data };
+        public static Result<T> Error(T data, string errorMessage) => new() { Status = ResultStatus.Error, Data = data, ErrorMessage = errorMessage };
         public static Result<T> NotFound(T data) => new() { Status = ResultStatus.NotFound, Data = data };
     }
 }
