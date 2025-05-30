@@ -4,6 +4,6 @@ namespace AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositor
 {
     public interface IAccountRepository : IRepository<Account, long>
     {
-
+        Task<Account> GetByPhoneNumberAsync(string phoneNumber);
     }
 }
