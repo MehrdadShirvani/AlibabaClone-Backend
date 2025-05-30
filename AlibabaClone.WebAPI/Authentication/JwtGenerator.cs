@@ -1,4 +1,5 @@
 ﻿using AlibabaClone.Application.DTOs.Account;
+using AlibabaClone.Application.DTOs.Authentication;
 using AlibabaClone.Application.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -15,15 +16,15 @@ namespace AlibabaClone.WebAPI.Authentication
         {
             _jwtSettings = jwtSettings.Value;
         }
-        public string GenerateToken(AccountDTO accountDto)
+        public string GenerateToken(AuthResponseDto authResponseDto)
         {
             List<Claim> claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, accountDto.Id.ToString()),
-                new Claim("phone", accountDto.PhoneNumber)
+                new Claim(JwtRegisteredClaimNames.Sub, authResponseDto.Id.ToString()),
+                new Claim("phone", authResponseDto.PhoneNumber)
             };
 
-            foreach (var role in accountDto.Roles)
+            foreach (var role in authResponseDto.Roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
