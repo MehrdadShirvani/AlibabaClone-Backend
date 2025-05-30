@@ -15,7 +15,8 @@ namespace AlibabaClone.Application.Mappers.Profiles
                 .ForMember(dest => dest.FromLocationTitle, opt => opt.MapFrom(src => src.FromLocation.Title))
                 .ForMember(dest => dest.ToLocationTitle, opt => opt.MapFrom(src => src.ToLocation.Title))
                 .ForMember(dest => dest.FromCityTitle, opt => opt.MapFrom(src => src.FromLocation.City.Title))
-                .ForMember(dest => dest.ToCityTitle, opt => opt.MapFrom(src => src.ToLocation.City.Title));
+                .ForMember(dest => dest.ToCityTitle, opt => opt.MapFrom(src => src.ToLocation.City.Title))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.BasePrice));
 
             CreateMap<City, CityDto>();
         }
