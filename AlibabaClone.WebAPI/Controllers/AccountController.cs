@@ -8,11 +8,11 @@ namespace AlibabaClone.WebAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "User")]
         [HttpGet("profile")]
         public IActionResult GetProfile()
         {
-            return Ok();
+            return Ok("Hi there, hello");
         }
     }
 }
