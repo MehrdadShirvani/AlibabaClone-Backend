@@ -4,8 +4,10 @@ using AlibabaClone.Application.Interfaces;
 using AlibabaClone.Application.Result;
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
+using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
 using AutoMapper;
+using System.Security.Principal;
 
 namespace AlibabaClone.Application.Services
 {
@@ -14,11 +16,13 @@ namespace AlibabaClone.Application.Services
 
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AuthService(IAccountRepository accountRepository, IMapper mapper)
+        public AuthService(IAccountRepository accountRepository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _accountRepository = accountRepository;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -35,21 +39,31 @@ namespace AlibabaClone.Application.Services
                 return Result<AuthResponseDto>.Error(null, "Password must be at least 8 characters and include both digits and letters.");
             }
 
-            var accountDto = new AccountDTO
+            var accountDto = new AccountDto
             {
                 PhoneNumber = request.PhoneNumber,
                 Password = PasswordHasher.HashPassword(request.Password),
+                Roles = new List<string> { "User" }
             };
 
             await _accountRepository.AddAsync(_mapper.Map<Account>(accountDto));
-            //Add Account Role 
+            await _unitOfWork.SaveChangesAsync();
+            var account = await _accountRepository.GetByPhoneNumberAsync(accountDto.PhoneNumber);
 
-            //TODO;
+            var accountRole = new AccountRole
+            {
+                AccountId = account.Id,   
+                RoleId = 1 //TODO: make this better
+            };
+
+            await _accountRepository.AddAccountRoleAsync(accountRole);
+            await _unitOfWork.SaveChangesAsync();
+            
             var response = new AuthResponseDto
             {
-                //TODO? Id
+                Id = account.Id,
                 PhoneNumber = accountDto.PhoneNumber,
-                Roles = accountDto.Roles,
+                Roles = new List<string> { "User"}, //TODO: make this better
             };
 
             return Result<AuthResponseDto>.Success(response);
@@ -57,7 +71,7 @@ namespace AlibabaClone.Application.Services
 
         public async Task<Result<AuthResponseDto>> LoginAsync(LoginRequestDto request)
         {
-            var accountDto = _mapper.Map<AccountDTO>(await _accountRepository.GetByPhoneNumberAsync(request.PhoneNumber));
+            var accountDto = _mapper.Map<AccountDto>(await _accountRepository.GetByPhoneNumberAsync(request.PhoneNumber));
             if (accountDto == null)
             {
                 return Result<AuthResponseDto>.Error(null, "Invalid phone number or password.");
