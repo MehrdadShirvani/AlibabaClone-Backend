@@ -1,5 +1,7 @@
-﻿using AlibabaClone.Application.DTOs.City;
+﻿using AlibabaClone.Application.DTOs.Account;
+using AlibabaClone.Application.DTOs.City;
 using AlibabaClone.Application.DTOs.Transportation;
+using AlibabaClone.Domain.Aggregates.AccountAggregates;
 using AlibabaClone.Domain.Aggregates.LocationAggregates;
 using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 using AutoMapper;
@@ -19,6 +21,9 @@ namespace AlibabaClone.Application.Mappers.Profiles
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.BasePrice));
 
             CreateMap<City, CityDto>();
+            CreateMap<Account, AccountDTO>()
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.AccountRoles.Select(x=>x.Role.Title)))
+                .ReverseMap();
         }
     }
 }
