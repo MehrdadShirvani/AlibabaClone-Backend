@@ -1,6 +1,6 @@
 ﻿using AlibabaClone.Application.DTOs.Authentication;
 using AlibabaClone.Application.Interfaces;
-using Microsoft.AspNetCore.Http;
+using AlibabaClone.WebAPI.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlibabaClone.WebAPI.Controllers
@@ -10,31 +10,50 @@ namespace AlibabaClone.WebAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IJwtGenerator _jwtGenerator;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IJwtGenerator jwtGenerator)
         {
             _authService = authService;
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
-        {
-            var result = await _authService.LoginAsync(request);
-            if (!result.IsSuccess)
-                return BadRequest(result.ErrorMessage);
-
-            return Ok(result.Data);
+            _jwtGenerator = jwtGenerator;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
+        public async Task<IActionResult> Register(RegisterRequestDto request)
         {
             var result = await _authService.RegisterAsync(request);
 
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok(result.Data);
+            var token = _jwtGenerator.GenerateToken(result.Data);
+            var response = new AuthResponseDto
+            {
+                PhoneNumber = result.Data.PhoneNumber,
+                Roles = result.Data.Roles,
+                Token = token
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginRequestDto request)
+        {
+            var result = await _authService.LoginAsync(request);
+
+            if (!result.IsSuccess)
+                return Unauthorized(result.ErrorMessage);
+
+            var token = _jwtGenerator.GenerateToken(result.Data);
+            var response = new AuthResponseDto
+            {
+                PhoneNumber = result.Data.PhoneNumber,
+                Roles = result.Data.Roles,
+                Token = token
+            };
+
+            return Ok(response);
         }
     }
 }

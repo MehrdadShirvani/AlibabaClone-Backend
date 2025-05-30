@@ -1,6 +1,5 @@
 ﻿using AlibabaClone.Application.DTOs.Account;
 using AlibabaClone.Application.DTOs.Authentication;
-using AlibabaClone.Application.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

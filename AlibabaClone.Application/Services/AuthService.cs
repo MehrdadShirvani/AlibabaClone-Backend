@@ -15,12 +15,10 @@ namespace AlibabaClone.Application.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
-        private readonly IJwtGenerator _jwtGenerator;
-        public AuthService(IAccountRepository accountRepository, IMapper mapper, IJwtGenerator jwtGenerator)
+        public AuthService(IAccountRepository accountRepository, IMapper mapper)
         {
             _accountRepository = accountRepository;
             _mapper = mapper;
-            _jwtGenerator = jwtGenerator;
         }
 
 
@@ -46,13 +44,12 @@ namespace AlibabaClone.Application.Services
             await _accountRepository.AddAsync(_mapper.Map<Account>(accountDto));
             //Add Account Role 
 
-            var token = _jwtGenerator.GenerateToken(accountDto); 
-
+            //TODO;
             var response = new AuthResponseDto
             {
-                Token = token,
+                //TODO? Id
                 PhoneNumber = accountDto.PhoneNumber,
-                //Role = accountDto.Role
+                Roles = accountDto.Roles,
             };
 
             return Result<AuthResponseDto>.Success(response);
@@ -71,13 +68,11 @@ namespace AlibabaClone.Application.Services
                 return Result<AuthResponseDto>.Error(null, "Invalid phone number or password.");
             }
 
-            var token = _jwtGenerator.GenerateToken(accountDto);
 
             var response = new AuthResponseDto
             {
                 PhoneNumber = accountDto.PhoneNumber,
                 Roles = accountDto.Roles,
-                Token = token
             };
 
             return Result<AuthResponseDto>.Success(response);
