@@ -9,11 +9,13 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
         public void Configure(EntityTypeBuilder<Transaction> builder)
         {
             builder.HasKey(t => t.Id);
+            builder.Property(a => a.Id)
+                .ValueGeneratedOnAdd();
 
             builder.Property(t => t.TransactionTypeId)
                 .IsRequired(true);
 
-            builder.Property(t => t.TicketId)
+            builder.Property(t => t.TicketOrderId)
                 .IsRequired(false);
 
             builder.Property(t => t.BaseAmount)
@@ -40,9 +42,14 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
                 .HasMaxLength(200);
 
             // Relationships
-            builder.HasOne(t => t.Ticket)
+            builder.HasOne(t => t.TicketOrder)
                 .WithMany()
-                .HasForeignKey(t => t.TicketId)
+                .HasForeignKey(t => t.TicketOrderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(t => t.Coupon)
+                .WithMany(c => c.Transactions)
+                .HasForeignKey(t => t.CouponId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.TransactionType)

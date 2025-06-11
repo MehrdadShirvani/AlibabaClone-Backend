@@ -9,6 +9,8 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
         public void Configure(EntityTypeBuilder<Transportation> builder)
         {
             builder.HasKey(t => t.Id);
+            builder.Property(a => a.Id)
+                .ValueGeneratedOnAdd();
 
             builder.Property(t => t.FromLocationId)
                 .IsRequired();
