@@ -10,8 +10,11 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
         {
             builder.HasKey(t => t.Id);
 
+            builder.Property(t => t.TransactionTypeId)
+                .IsRequired(true);
+
             builder.Property(t => t.TicketId)
-                .IsRequired();
+                .IsRequired(false);
 
             builder.Property(t => t.BaseAmount)
                 .IsRequired()
@@ -32,10 +35,19 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
             builder.Property(t => t.CouponId)
                 .IsRequired(false);
 
+            builder.Property(s => s.Description)
+                .IsRequired(false)
+                .HasMaxLength(200);
+
             // Relationships
             builder.HasOne(t => t.Ticket)
                 .WithMany()
                 .HasForeignKey(t => t.TicketId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(t => t.TransactionType)
+                .WithMany()
+                .HasForeignKey(t => t.TransactionTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
