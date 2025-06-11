@@ -73,6 +73,7 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
 
 //Extracting UserId from token
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IUserContext, UserContext>();
 
 builder.Services.AddAuthentication("Bearer")
