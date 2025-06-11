@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace AlibabaClone.Application.DTOs.Account
 {
-    public class UpsertPersonDto
+    public class PersonDto
     {
+        public long Id { get; set; }
         [Required(ErrorMessage = "First name is required.")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Last name is required.")]

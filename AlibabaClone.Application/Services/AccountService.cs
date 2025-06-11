@@ -147,7 +147,7 @@ namespace AlibabaClone.Application.Services
             return hasDigit && hasLetter;
         }
 
-        public async Task<Result<long>> UpsertPersonAsync(long accountId, UpsertPersonDto dto)
+        public async Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) throw new Exception("Account not found");

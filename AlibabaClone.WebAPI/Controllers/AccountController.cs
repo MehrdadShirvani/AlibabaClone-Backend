@@ -125,7 +125,7 @@ namespace AlibabaClone.WebAPI.Controllers
         }
 
         [HttpPost("person")]
-        public async Task<IActionResult> UpsertPerson([FromBody] UpsertPersonDto dto)
+        public async Task<IActionResult> UpsertPerson([FromBody] PersonDto dto)
         {
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
