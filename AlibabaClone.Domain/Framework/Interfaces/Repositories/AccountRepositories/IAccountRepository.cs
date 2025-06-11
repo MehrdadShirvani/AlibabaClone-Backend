@@ -6,5 +6,6 @@ namespace AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositor
     {
         Task<Account> GetByPhoneNumberAsync(string phoneNumber);
         Task AddAccountRoleAsync(AccountRole accountRole);
+        Task<Account> GetProfileAsync(long accountId);
     }
 }
