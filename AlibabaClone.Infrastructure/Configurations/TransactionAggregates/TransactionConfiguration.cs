@@ -15,6 +15,9 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
             builder.Property(t => t.TransactionTypeId)
                 .IsRequired(true);
 
+            builder.Property(t => t.AccountId)
+                .IsRequired(true);
+
             builder.Property(t => t.TicketOrderId)
                 .IsRequired(false);
 
@@ -46,6 +49,11 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
                 .WithOne(t => t.Transaction)
                 .HasForeignKey<Transaction>(t => t.TicketOrderId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(t => t.Account)
+               .WithMany(a => a.Transactions)
+               .HasForeignKey(t => t.AccountId)
+               .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.Coupon)
                 .WithMany(c => c.Transactions)

@@ -1,4 +1,5 @@
-﻿using AlibabaClone.Domain.Aggregates.TransportationAggregates;
+﻿using AlibabaClone.Domain.Aggregates.TransactionAggregates;
+using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 using AlibabaClone.Domain.Framework.Base;
 
 namespace AlibabaClone.Domain.Aggregates.AccountAggregates
@@ -14,6 +15,7 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
 
         public virtual Person? Person { get; set; }
         public virtual BankAccountDetail? BankAccountDetail { get; set; }
+        public virtual ICollection<Transaction> Transactions{ get; set; }
         public virtual ICollection<TicketOrder> BoughtTicketOrders { get; set; }
         public virtual ICollection<AccountRole> AccountRoles { get; set; }
         public virtual ICollection<Person> CreatedPeople{ get; set; }
