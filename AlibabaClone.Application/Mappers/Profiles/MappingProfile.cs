@@ -25,6 +25,19 @@ namespace AlibabaClone.Application.Mappers.Profiles
                 .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.AccountRoles.Select(x=>x.Role.Title)));
             CreateMap<AccountDto, Account>() 
             .ForMember(dest => dest.AccountRoles, opt => opt.Ignore());
+            
+            CreateMap<Account, ProfileDto>()
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Person != null ? src.Person.FirstName : ""))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Person != null ? src.Person.LastName : ""))
+                .ForMember(dest => dest.AccountPhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.PersonPhoneNumber, opt => opt.MapFrom(src => src.Person != null ? src.Person.PhoneNumber : ""))
+                .ForMember(dest => dest.IdNumber, opt => opt.MapFrom(src => src.Person != null ? src.Person.IdNumber : ""))
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.Person != null ? src.Person.Birthdate : (DateTime?)null))
+                .ForMember(dest => dest.BankAccountNumber, opt => opt.MapFrom(src => src.BankAccountDetail != null ? src.BankAccountDetail.BankAccountNumber : ""))
+                .ForMember(dest => dest.CardNumber, opt => opt.MapFrom(src => src.BankAccountDetail != null ? src.BankAccountDetail.CardNumber : ""))
+                .ForMember(dest => dest.IBAN, opt => opt.MapFrom(src => src.BankAccountDetail != null ? src.BankAccountDetail.IBAN : ""))
+                .ForMember(dest => dest.CurrentBalance, opt => opt.MapFrom(src => src.CurrentBalance));
         }
     }
 }
