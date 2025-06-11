@@ -25,11 +25,16 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
                 .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            builder.HasIndex(p => p.IdNumber).IsUnique();
 
             builder.Property(p => p.PassportNumber)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+
+
+            builder.Property(a => a.PhoneNumber)
+                 .IsRequired(false)
+                 .IsUnicode(false)
+                 .HasMaxLength(20);
 
             builder.Property(p => p.EnglishFirstName)
                 .HasMaxLength(50)
@@ -39,6 +44,7 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
+
             builder.Property(p => p.Birthdate)
                 .HasColumnType("date");
 
@@ -47,6 +53,11 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
                 .WithMany()
                 .HasForeignKey(p => p.GenderId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(p => p.CreatorAccount)
+               .WithMany(a => a.CreatedPeople)
+               .HasForeignKey(a => a.CreatorAccountId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

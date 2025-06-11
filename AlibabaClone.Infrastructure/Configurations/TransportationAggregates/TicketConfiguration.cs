@@ -9,14 +9,13 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
         public void Configure(EntityTypeBuilder<Ticket> builder)
         {
             builder.HasKey(t => t.Id);
+            builder.Property(a => a.Id)
+                .ValueGeneratedOnAdd();
 
-            builder.Property(t => t.TransportationId)
+            builder.Property(t => t.TicketOrderId)
                 .IsRequired();
 
             builder.Property(t => t.SeatId)
-                .IsRequired();
-
-            builder.Property(t => t.BuyerId)
                 .IsRequired();
 
             builder.Property(t => t.TravelerId)
@@ -24,6 +23,9 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
 
             builder.Property(t => t.CreatedAt)
                 .IsRequired();
+
+            builder.Property(t => t.CanceledAt)
+                .IsRequired(false);
 
             builder.Property(t => t.CompanionId)
                 .IsRequired(false);
@@ -35,25 +37,22 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            builder.HasIndex(x => x.SerialNumber).IsUnique();
+
 
             builder.Property(t => t.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false);
 
             // Relationships
-            builder.HasOne(t => t.Transportation)
+            builder.HasOne(t => t.TicketOrder)
                 .WithMany(t => t.Tickets)
-                .HasForeignKey(t => t.TransportationId)
+                .HasForeignKey(t => t.TicketOrderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.Seat)
                 .WithMany(s => s.Tickets)
                 .HasForeignKey(t => t.SeatId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(t => t.Buyer)
-                .WithMany(a => a.BoughtTickets)
-                .HasForeignKey(t => t.BuyerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.Traveler)

@@ -27,10 +27,13 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
                 .IsUnicode(false)
                 .HasMaxLength(255);
 
+            builder.Property(a => a.CurrentBalance)
+                .HasColumnType("decimal(18,2)");
+
             // Relationships
             builder.HasOne(a => a.Person)
-                .WithMany(p => p.Accounts)
-                .HasForeignKey(a => a.PersonId)
+                .WithOne()
+                .HasForeignKey<Account>(a => a.PersonId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

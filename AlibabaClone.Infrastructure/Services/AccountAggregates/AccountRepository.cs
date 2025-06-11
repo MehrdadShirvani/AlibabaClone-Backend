@@ -24,5 +24,18 @@ namespace AlibabaClone.Infrastructure.Services.AccountAggregates
             var user = await DbContext.Accounts.Include(x => x.AccountRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
             return user;
         }
+
+        public async Task<Account> GetProfileAsync(long accountId)
+        {
+            return await DbContext.Accounts
+                                  .Include(x => x.BankAccountDetail)
+                                  .Include(x => x.Person)
+                                  .FirstOrDefaultAsync(x => x.Id == accountId);
+        }
+
+        public async Task<Account> GetByEmailAsync(string email)
+        {
+            return await DbContext.Accounts.FirstOrDefaultAsync(x => x.Email == email);
+        }
     }
 }

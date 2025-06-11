@@ -2,9 +2,8 @@
 
 namespace AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories
 {
-    public interface IPersonRepository : IRepository<Person, long>
+    public interface IBankAccountDetailRepository : IRepository<BankAccountDetail, long>
     {
-
-        Task<List<Person>> GetAllByCreatorAccountIdAsync(long accountId);
+        Task<BankAccountDetail> GetByAccountIdAsync(long accountId);
     }
 }
