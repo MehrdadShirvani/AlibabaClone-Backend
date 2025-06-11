@@ -13,7 +13,9 @@ namespace AlibabaClone.Application.Interfaces
         Task<Result<List<TransactionDto>>> GetTransactions(long accountId);
         Task<Result<long>> UpdateEmailAsync(long accountId, string newEmail);
         Task<Result<long>> UpdatePasswordAsync(long accountId, string oldPassword, string newPassword);
+        Task<Result<long>> UpsertAccountPersonAsync(long accountId, PersonDto dto); // Returns PersonId
         Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto); // Returns PersonId
         Task<Result<long>> UpsertBankAccountDetailAsync(long accountId, UpsertBankAccountDetailDto dto);
+        Task<Result<List<PersonDto>>> GetPeople(long accountId);
     }
 }

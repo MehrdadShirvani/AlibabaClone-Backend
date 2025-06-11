@@ -147,7 +147,7 @@ namespace AlibabaClone.Application.Services
             return hasDigit && hasLetter;
         }
 
-        public async Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto)
+        public async Task<Result<long>> UpsertAccountPersonAsync(long accountId, PersonDto dto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) return Result<long>.Error(0,"Account not found");
@@ -155,20 +155,29 @@ namespace AlibabaClone.Application.Services
             if(account.PersonId.HasValue)
             {
                 person = await _personRepository.GetByIdAsync(account.PersonId.Value);
-                if (account == null) return Result<long>.Error(0, "Person not found");
-                person = _mapper.Map<Person>(dto);
+                if (person == null) return Result<long>.Error(0, "Person not found");
+                _mapper.Map(dto, person);
+                person.CreatorAccountId = account.Id;
                 person.Id = account.PersonId.Value;
                 _personRepository.Update(person);
             }
             else
             {
                 person = _mapper.Map<Person>(dto);
+                person.CreatorAccountId = account.Id;
                 await _personRepository.AddAsync(person);
             }
 
             await _unitOfWork.SaveChangesAsync();
+            
+            account.PersonId = person.Id;
+            _accountRepository.Update(account);
+            await _unitOfWork.SaveChangesAsync();
+
             return Result<long>.Success(person.Id);
         }
+
+        
 
         public async Task<Result<long>> UpsertBankAccountDetailAsync(long accountId, UpsertBankAccountDetailDto dto)
         {
@@ -216,6 +225,43 @@ namespace AlibabaClone.Application.Services
                     return "Invalid Card Number format";
             }
             return "";
+        }
+
+        public async Task<Result<List<PersonDto>>> GetPeople(long accountId)
+        {
+            var result = await _personRepository.GetAllByCreatorAccountIdAsync(accountId);
+            if (result != null)
+            {
+                return Result<List<PersonDto>>.Success(_mapper.Map<List<PersonDto>>(result));
+            }
+
+            return Result<List<PersonDto>>.NotFound(null);
+        }
+
+        public async Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null) return Result<long>.Error(0, "Account not found");
+            Person person;
+            if (account.PersonId.HasValue)
+            {
+                person = await _personRepository.GetByIdAsync(account.PersonId.Value);
+                if (person == null) return Result<long>.Error(0, "Person not found");
+                _mapper.Map(dto, person);
+                person.CreatorAccountId = account.Id;
+                person.Id = account.PersonId.Value;
+                _personRepository.Update(person);
+            }
+            else
+            {
+                person = _mapper.Map<Person>(dto);
+                person.CreatorAccountId = account.Id;
+                await _personRepository.AddAsync(person);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result<long>.Success(person.Id);
         }
     }
 }
