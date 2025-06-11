@@ -9,6 +9,8 @@ using AlibabaClone.Application.DTOs.Transportation;
 using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
+using AlibabaClone.Application.DTOs.Authentication;
+using AlibabaClone.Application.Utils;
 
 namespace AlibabaClone.Application.Services
 {
@@ -107,6 +109,36 @@ namespace AlibabaClone.Application.Services
             _accountRepository.Update(account);
             await _unitOfWork.SaveChangesAsync();
             return Result<long>.Success(account.Id);
+        }
+
+        public async Task<Result<long>> UpdatePasswordAsync(long accountId, string oldPassword, string newPassword)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null) throw new Exception("Account not found");
+            if (!PasswordHasher.VerifyPassword(oldPassword, account.Password))
+            {
+                return Result<long>.Error(0, "Invalid password.");
+            }
+
+            if (!IsPasswordStrong(newPassword))
+            {
+                return Result<long>.Error(0, "New Password must be at least 8 characters and include both digits and letters.");
+            }
+
+            account.Password = PasswordHasher.HashPassword(newPassword);
+            _accountRepository.Update(account);
+            await _unitOfWork.SaveChangesAsync();
+            return Result<long>.Success(account.Id);
+        }
+
+        private bool IsPasswordStrong(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
+                return false;
+
+            bool hasDigit = password.Any(char.IsDigit);
+            bool hasLetter = password.Any(char.IsLetter);
+            return hasDigit && hasLetter;
         }
     }
 }
