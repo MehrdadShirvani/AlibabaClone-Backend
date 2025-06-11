@@ -25,7 +25,6 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
                 .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            builder.HasIndex(p => p.IdNumber).IsUnique();
 
             builder.Property(p => p.PassportNumber)
                 .HasMaxLength(20)
@@ -54,6 +53,11 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
                 .WithMany()
                 .HasForeignKey(p => p.GenderId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(p => p.CreatorAccount)
+               .WithMany(a => a.CreatedPeople)
+               .HasForeignKey(a => a.CreatorAccountId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
