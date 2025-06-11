@@ -10,6 +10,7 @@ using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
+using System.ComponentModel.DataAnnotations;
 
 namespace AlibabaClone.Application.Services
 {
@@ -17,6 +18,7 @@ namespace AlibabaClone.Application.Services
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IPersonRepository _personRepository;
+        private readonly IBankAccountDetailRepository _bankAccountDetailRepository;
         private readonly ITicketOrderRepository _ticketOrderRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly ITransactionRepository _transactionRepository;
@@ -27,9 +29,10 @@ namespace AlibabaClone.Application.Services
                               IUnitOfWork unitOfWork,
                               IAccountRepository accountRepository,
                               IPersonRepository personRepository,
-                              ITicketOrderRepository ticketOrderRepository, 
-                              ITicketRepository ticketRepository, 
-                              ITransactionRepository transactionRepository)
+                              ITicketOrderRepository ticketOrderRepository,
+                              ITicketRepository ticketRepository,
+                              ITransactionRepository transactionRepository,
+                              IBankAccountDetailRepository bankAccountDetailRepository)
         {
             _accountRepository = accountRepository;
             _personRepository = personRepository;
@@ -38,6 +41,7 @@ namespace AlibabaClone.Application.Services
             _ticketOrderRepository = ticketOrderRepository;
             _ticketRepository = ticketRepository;
             _transactionRepository = transactionRepository;
+            _bankAccountDetailRepository = bankAccountDetailRepository;
         }
 
         public async Task<Result<ProfileDto>> GetProfileAsync(long accountId)
@@ -181,6 +185,54 @@ namespace AlibabaClone.Application.Services
 
             await _unitOfWork.SaveChangesAsync();
             return Result<long>.Success(person.Id);
+        }
+
+        public async Task<Result<long>> UpsertBankAccountDetailAsync(long accountId, UpsertBankAccountDetailDto dto)
+        {
+            var error = ValidateBankInfo(dto);
+            if(string.IsNullOrEmpty(error) == false)
+            {
+                return Result<long>.Error(0, error);
+            }
+
+            var detail = await _bankAccountDetailRepository.GetByAccountIdAsync(accountId);
+            if (detail == null)
+            {
+                detail = new BankAccountDetail()
+                {
+                    AccountId = accountId,
+                    BankAccountNumber = dto.BankAccountNumber,
+                    CardNumber = dto.CardNumber,
+                    IBAN = dto.IBAN,
+                };
+
+                await _bankAccountDetailRepository.AddAsync(detail);
+            }
+            else
+            {
+                detail.BankAccountNumber = dto.BankAccountNumber;
+                detail.CardNumber = dto.CardNumber;
+                detail.IBAN = dto.IBAN;
+
+                _bankAccountDetailRepository.Update(detail);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            return Result<long>.Success(detail.Id);
+        }
+
+        private string ValidateBankInfo(UpsertBankAccountDetailDto dto)
+        {
+            if (!string.IsNullOrEmpty(dto.IBAN) && dto.IBAN.Length != 24 && dto.IBAN.Any(x=> char.IsDigit(x) == false))
+                return "IBAN must be 24 digits";
+
+            if (!string.IsNullOrEmpty(dto.CardNumber))
+            {
+                var digitsOnly = dto.CardNumber.Replace("-", "");
+                if (digitsOnly.Length != 16 || !digitsOnly.All(char.IsDigit))
+                    return "Invalid Card Number format";
+            }
+            return "";
         }
     }
 }
