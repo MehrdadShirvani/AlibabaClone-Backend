@@ -5,9 +5,9 @@ using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationRepositories;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AutoMapper;
-using System.Runtime.CompilerServices;
 using AlibabaClone.Application.DTOs.Transportation;
-using System.Collections.Generic;
+using AlibabaClone.Application.DTOs.Transaction;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 
 namespace AlibabaClone.Application.Services
 {
@@ -15,15 +15,24 @@ namespace AlibabaClone.Application.Services
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ITicketOrderRepository _ticketOrderRepository;
+        private readonly ITicketRepository _ticketRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, IUnitOfWork unitOfWork, ITicketOrderRepository ticketOrderRepository)
+        public AccountService(IMapper mapper,
+                              IUnitOfWork unitOfWork,
+                              IAccountRepository accountRepository,
+                              ITicketOrderRepository ticketOrderRepository, 
+                              ITicketRepository ticketRepository, 
+                              ITransactionRepository transactionRepository)
         {
             _accountRepository = accountRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _ticketOrderRepository = ticketOrderRepository;
+            _ticketRepository = ticketRepository;
+            _transactionRepository = transactionRepository;
         }
 
         public async Task<Result<ProfileDto>> GetProfileAsync(long accountId)
@@ -46,6 +55,33 @@ namespace AlibabaClone.Application.Services
             }
 
             return Result<List<TicketOrderSummaryDto>>.NotFound(null);
+        }
+
+        public async Task<Result<List<TravelerTicketDto>>> GetTicketOrderTravelersDetails(long accountId, long ticketOrderId)
+        {
+            var result = await _ticketRepository.GetAllTicketsByTicketOrderId(ticketOrderId);
+            if (result != null)
+            {
+                if(result.Count > 0 && result.First().TicketOrder.BuyerId != accountId)
+                {
+                    return Result<List<TravelerTicketDto>>.Unauthorized(null);
+                }
+
+                return Result<List<TravelerTicketDto>>.Success(_mapper.Map<List<TravelerTicketDto>>(result));
+            }
+
+            return Result<List<TravelerTicketDto>>.NotFound(null);
+        }
+
+        public async Task<Result<List<TransactionDto>>> GetTransactions(long accountId)
+        {
+            var result = await _transactionRepository.GetAllByAccountIdAsync(accountId);
+            if (result != null)
+            {
+                return Result<List<TransactionDto>>.Success(_mapper.Map<List<TransactionDto>>(result));
+            }
+
+            return Result<List<TransactionDto>>.NotFound(null);
         }
     }
 }

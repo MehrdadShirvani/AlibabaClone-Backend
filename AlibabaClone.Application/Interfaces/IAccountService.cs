@@ -1,4 +1,5 @@
 ﻿using AlibabaClone.Application.DTOs.Account;
+using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Application.DTOs.Transportation;
 using AlibabaClone.Application.Result;
 
@@ -8,5 +9,7 @@ namespace AlibabaClone.Application.Interfaces
     {
         Task<Result<ProfileDto>> GetProfileAsync(long accountId);
         Task<Result<List<TicketOrderSummaryDto>>> GetTravels(long accountId);
+        Task<Result<List<TravelerTicketDto>>> GetTicketOrderTravelersDetails(long accountId, long ticketOrderId);
+        Task<Result<List<TransactionDto>>> GetTransactions(long accountId);
     }
 }
