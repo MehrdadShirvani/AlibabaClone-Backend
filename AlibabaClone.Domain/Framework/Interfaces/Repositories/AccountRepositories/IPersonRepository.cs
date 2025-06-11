@@ -5,5 +5,6 @@ namespace AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositor
     public interface IPersonRepository : IRepository<Person, long>
     {
 
+        Task<List<Person>> GetAllByCreatorAccountIdAsync(long accountId);
     }
 }
