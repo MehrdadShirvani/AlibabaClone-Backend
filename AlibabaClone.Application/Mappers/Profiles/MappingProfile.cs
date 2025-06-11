@@ -52,6 +52,13 @@ namespace AlibabaClone.Application.Mappers.Profiles
                     .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.Transportation.Vehicle.Title))
                     .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Transportation.Company.Title))
                     .ForMember(dest => dest.CompanyLogo, opt => opt.MapFrom(src => src.Transportation.Company.Title));
+
+            CreateMap<Ticket, TravelerTicketDto>()
+                        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                        .ForMember(dest => dest.SerialNumber, opt => opt.MapFrom(src => src.SerialNumber))
+                        .ForMember(dest => dest.TicketStatus, opt => opt.MapFrom(src => src.TicketStatus.Title))
+                        .ForMember(dest => dest.CompanionName, opt => opt.MapFrom(src => src.Companion != null ? $"{src.Companion.FirstName} {src.Companion.LastName}" : ""))
+                        .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
         }
     }
 }
