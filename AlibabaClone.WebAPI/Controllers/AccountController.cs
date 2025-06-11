@@ -23,7 +23,29 @@ namespace AlibabaClone.WebAPI.Controllers
         public async Task<IActionResult> GetProfile()
         {
             long userId = _userContext.GetUserId();
+            if(userId <= 0) return Unauthorized();
             var result = await _accountService.GetProfileAsync(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+
+            return result.Status switch
+            {
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("my-travels")]
+        public async Task<IActionResult> GetMyTravels()
+        {
+            long userId = _userContext.GetUserId();
+            if (userId <= 0) return Unauthorized();
+
+            var result = await _accountService.GetTravels(userId);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);
