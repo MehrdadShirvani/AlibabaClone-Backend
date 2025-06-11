@@ -8,15 +8,15 @@ using AutoMapper;
 using AlibabaClone.Application.DTOs.Transportation;
 using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
-using AlibabaClone.Domain.Aggregates.AccountAggregates;
-using AlibabaClone.Application.DTOs.Authentication;
 using AlibabaClone.Application.Utils;
+using AlibabaClone.Domain.Aggregates.AccountAggregates;
 
 namespace AlibabaClone.Application.Services
 {
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IPersonRepository _personRepository;
         private readonly ITicketOrderRepository _ticketOrderRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly ITransactionRepository _transactionRepository;
@@ -26,11 +26,13 @@ namespace AlibabaClone.Application.Services
         public AccountService(IMapper mapper,
                               IUnitOfWork unitOfWork,
                               IAccountRepository accountRepository,
+                              IPersonRepository personRepository,
                               ITicketOrderRepository ticketOrderRepository, 
                               ITicketRepository ticketRepository, 
                               ITransactionRepository transactionRepository)
         {
             _accountRepository = accountRepository;
+            _personRepository = personRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _ticketOrderRepository = ticketOrderRepository;
@@ -139,6 +141,46 @@ namespace AlibabaClone.Application.Services
             bool hasDigit = password.Any(char.IsDigit);
             bool hasLetter = password.Any(char.IsLetter);
             return hasDigit && hasLetter;
+        }
+
+        public async Task<Result<long>> UpsertPersonAsync(long accountId, UpsertPersonDto dto)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null) throw new Exception("Account not found");
+            Person person;
+            if(account.PersonId.HasValue)
+            {
+                person = await _personRepository.GetByIdAsync(account.PersonId.Value);
+                if (account == null) throw new Exception("Person not found");
+                person.FirstName = dto.FirstName;
+                person.LastName = dto.LastName;
+                person.IdNumber = dto.IdNumber;
+                person.Birthdate = dto.BirthDate;
+                person.CreatorAccountId = accountId;
+                person.EnglishFirstName = dto.EnglishFirstName;
+                person.EnglishLastName = dto.EnglishLastName;
+                person.GenderId = dto.GenderId;
+                person.PhoneNumber = dto.PhoneNumber;
+                _personRepository.Update(person);
+            }
+            else
+            {
+                person = new Person { 
+                    FirstName = dto.FirstName, 
+                    LastName = dto.LastName,
+                    IdNumber = dto.IdNumber,
+                    Birthdate = dto.BirthDate,
+                    CreatorAccountId = accountId,
+                    EnglishFirstName = dto.EnglishFirstName,
+                    EnglishLastName = dto.EnglishLastName,
+                    GenderId = dto.GenderId,
+                    PhoneNumber = dto.PhoneNumber,
+                };
+                await _personRepository.AddAsync(person);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            return Result<long>.Success(person.Id);
         }
     }
 }
