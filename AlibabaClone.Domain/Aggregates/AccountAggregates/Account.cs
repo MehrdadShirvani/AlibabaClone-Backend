@@ -16,6 +16,7 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
         public virtual BankAccountDetail? BankAccountDetail { get; set; }
         public virtual ICollection<TicketOrder> BoughtTicketOrders { get; set; }
         public virtual ICollection<AccountRole> AccountRoles { get; set; }
+        public virtual ICollection<Person> CreatedPeople{ get; set; }
 
 
         public void Deposit(decimal amount)

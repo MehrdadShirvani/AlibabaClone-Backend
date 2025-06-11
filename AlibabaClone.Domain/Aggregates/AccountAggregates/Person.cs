@@ -15,9 +15,10 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
         public string? PassportNumber { get; set; }
         public string? EnglishFirstName { get; set; }
         public string? EnglishLastName { get; set; }
+        public long CreatorAccountId { get; set; }  
 
         public virtual Gender Gender { get; set; }
-        public virtual ICollection<Account> Accounts { get; set; }
+        public virtual Account CreatorAccount { get; set; }
         public virtual ICollection<Ticket> TraveledTickets { get; set; }
     }
 }
