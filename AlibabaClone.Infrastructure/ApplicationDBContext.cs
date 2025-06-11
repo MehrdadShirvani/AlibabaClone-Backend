@@ -18,6 +18,7 @@ namespace AlibabaClone.Infrastructure
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountRole> AccountRoles { get; set; }
         public DbSet<Gender> Genders{ get; set; }
+        public DbSet<BankAccountDetail> BankAccountDetails{ get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Role> Roles { get; set; }
 
@@ -28,8 +29,11 @@ namespace AlibabaClone.Infrastructure
         public DbSet<LocationType> LocationTypes{ get; set; }
 
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Coupon> Coupons{ get; set; }
+        public DbSet<TransactionType> TransactionTypes { get; set; }
 
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketOrder> TicketOrders { get; set; }
         public DbSet<TicketStatus> TicketStatuses { get; set; }
         public DbSet<Transportation> Transportations { get; set; }
 
