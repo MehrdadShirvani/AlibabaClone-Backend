@@ -8,6 +8,7 @@ using AutoMapper;
 using AlibabaClone.Application.DTOs.Transportation;
 using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
+using AlibabaClone.Domain.Aggregates.AccountAggregates;
 
 namespace AlibabaClone.Application.Services
 {
@@ -82,6 +83,30 @@ namespace AlibabaClone.Application.Services
             }
 
             return Result<List<TransactionDto>>.NotFound(null);
+        }
+
+        public async Task<Result<string>> UpdateEmailAsync(long accountId, string newEmail)
+        {
+            var account = await _accountRepository.GetByEmailAsync(newEmail);
+            if (account == null) throw new Exception("Account not found");
+            var accountByNewEmail = await _accountRepository.GetByEmailAsync(newEmail);
+            if (accountByNewEmail != null )
+            {
+                if(accountByNewEmail.Id != accountId)
+                {
+                    return Result<string>.Error("", "Email is used by another account");
+                }
+                else
+                {
+                    return Result<string>.Success("");
+                }
+            }
+
+
+            account.Email = newEmail;
+            _accountRepository.Update(account);
+            await _unitOfWork.SaveChangesAsync();
+            return Result<string>.Success("");
         }
     }
 }
