@@ -10,6 +10,7 @@ namespace AlibabaClone.Application.DTOs.Account
     public class PersonDto
     {
         public long Id { get; set; }
+        public long CreatorAccountId { get; set; }
         [Required(ErrorMessage = "First name is required.")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Last name is required.")]

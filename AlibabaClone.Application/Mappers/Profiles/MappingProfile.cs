@@ -64,6 +64,7 @@ namespace AlibabaClone.Application.Mappers.Profiles
                         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                         .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                         .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                        .ForMember(dest => dest.CreatorAccountId, opt => opt.MapFrom(src => src.CreatorAccountId))
                         .ForMember(dest => dest.IdNumber, opt => opt.MapFrom(src => src.IdNumber))
                         .ForMember(dest => dest.GenderId, opt => opt.MapFrom(src => src.GenderId))
                         .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
