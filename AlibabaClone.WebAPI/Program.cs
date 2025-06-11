@@ -50,6 +50,7 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketStatusRepository, TicketStatusRepository>();
 builder.Services.AddScoped<ITransportationRepository, TransportationRepository>();
+builder.Services.AddScoped<ITicketOrderRepository, TicketOrderRepository>();
 
 builder.Services.AddScoped<ISeatRepository, SeatRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
