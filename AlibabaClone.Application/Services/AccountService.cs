@@ -150,36 +150,19 @@ namespace AlibabaClone.Application.Services
         public async Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) throw new Exception("Account not found");
+            if (account == null) return Result<long>.Error(0,"Account not found");
             Person person;
             if(account.PersonId.HasValue)
             {
                 person = await _personRepository.GetByIdAsync(account.PersonId.Value);
-                if (account == null) throw new Exception("Person not found");
-                person.FirstName = dto.FirstName;
-                person.LastName = dto.LastName;
-                person.IdNumber = dto.IdNumber;
-                person.Birthdate = dto.BirthDate;
-                person.CreatorAccountId = accountId;
-                person.EnglishFirstName = dto.EnglishFirstName;
-                person.EnglishLastName = dto.EnglishLastName;
-                person.GenderId = dto.GenderId;
-                person.PhoneNumber = dto.PhoneNumber;
+                if (account == null) return Result<long>.Error(0, "Person not found");
+                person = _mapper.Map<Person>(dto);
+                person.Id = account.PersonId.Value;
                 _personRepository.Update(person);
             }
             else
             {
-                person = new Person { 
-                    FirstName = dto.FirstName, 
-                    LastName = dto.LastName,
-                    IdNumber = dto.IdNumber,
-                    Birthdate = dto.BirthDate,
-                    CreatorAccountId = accountId,
-                    EnglishFirstName = dto.EnglishFirstName,
-                    EnglishLastName = dto.EnglishLastName,
-                    GenderId = dto.GenderId,
-                    PhoneNumber = dto.PhoneNumber,
-                };
+                person = _mapper.Map<Person>(dto);
                 await _personRepository.AddAsync(person);
             }
 
