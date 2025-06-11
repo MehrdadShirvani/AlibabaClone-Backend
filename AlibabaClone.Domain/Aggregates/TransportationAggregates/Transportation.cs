@@ -27,7 +27,7 @@ namespace AlibabaClone.Domain.Aggregates.TransportationAggregates
         public virtual Location ToLocation { get; set; }
         public virtual Company Company { get; set; }  
         public virtual Vehicle Vehicle { get; set; }
-        public virtual ICollection<Ticket> Tickets { get; set; }
+        public virtual ICollection<TicketOrder> TicketOrders { get; set; }
 
     }
 }
