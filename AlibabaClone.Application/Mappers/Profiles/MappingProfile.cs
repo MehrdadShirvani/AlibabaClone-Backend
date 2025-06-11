@@ -38,6 +38,20 @@ namespace AlibabaClone.Application.Mappers.Profiles
                 .ForMember(dest => dest.CardNumber, opt => opt.MapFrom(src => src.BankAccountDetail != null ? src.BankAccountDetail.CardNumber : ""))
                 .ForMember(dest => dest.IBAN, opt => opt.MapFrom(src => src.BankAccountDetail != null ? src.BankAccountDetail.IBAN : ""))
                 .ForMember(dest => dest.CurrentBalance, opt => opt.MapFrom(src => src.CurrentBalance));
+
+            CreateMap<TicketOrder, TicketOrderSummaryDto>()
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                    .ForMember(dest => dest.SerialNumber, opt => opt.MapFrom(src => src.SerialNumber))
+                    .ForMember(dest => dest.BoughtAt, opt => opt.MapFrom(src => src.CreatedAt))
+                    .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Transaction != null ? src.Transaction.FinalAmount : 0))
+                    .ForMember(dest => dest.TravelStartDate, opt => opt.MapFrom(src => src.Transportation.StartDateTime))
+                    .ForMember(dest => dest.TravelEndDate, opt => opt.MapFrom(src => src.Transportation.EndDateTime))
+                    .ForMember(dest => dest.FromCity, opt => opt.MapFrom(src => src.Transportation.FromLocation.City.Title))
+                    .ForMember(dest => dest.ToCity, opt => opt.MapFrom(src => src.Transportation.ToLocation.City.Title))
+                    .ForMember(dest => dest.VehicleTypeId, opt => opt.MapFrom(src => src.Transportation.VehicleId))
+                    .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.Transportation.Vehicle.Title))
+                    .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Transportation.Company.Title))
+                    .ForMember(dest => dest.CompanyLogo, opt => opt.MapFrom(src => src.Transportation.Company.Title));
         }
     }
 }
