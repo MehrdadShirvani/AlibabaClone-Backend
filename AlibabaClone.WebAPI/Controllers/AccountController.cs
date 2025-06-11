@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AlibabaClone.WebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "User")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -18,7 +19,6 @@ namespace AlibabaClone.WebAPI.Controllers
             this._accountService = accountService;
         }
 
-        [Authorize(Roles = "User")]
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
@@ -32,13 +32,13 @@ namespace AlibabaClone.WebAPI.Controllers
 
             return result.Status switch
             {
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
                 ResultStatus.NotFound => NotFound(result.ErrorMessage),
                 ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
                 _ => StatusCode(500, result.ErrorMessage)
             };
         }
 
-        [Authorize(Roles = "User")]
         [HttpGet("my-travels")]
         public async Task<IActionResult> GetMyTravels()
         {
@@ -53,6 +53,49 @@ namespace AlibabaClone.WebAPI.Controllers
 
             return result.Status switch
             {
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
+        }
+
+        [HttpGet("my-travels/{ticketOrderId}")]
+        public async Task<IActionResult> GetTravelOrderDetails(long ticketOrderId)
+        {
+            long accountId = _userContext.GetUserId();
+            if (accountId <= 0) return Unauthorized();
+
+            var result = await _accountService.GetTicketOrderTravelersDetails(accountId, ticketOrderId);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+
+            return result.Status switch
+            {
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
+        }
+
+        [HttpGet("my-transactions")]
+        public async Task<IActionResult> GetMyTransactions()
+        {
+            long userId = _userContext.GetUserId();
+            if (userId <= 0) return Unauthorized();
+
+            var result = await _accountService.GetTransactions(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+
+            return result.Status switch
+            {
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
                 ResultStatus.NotFound => NotFound(result.ErrorMessage),
                 ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
                 _ => StatusCode(500, result.ErrorMessage)
