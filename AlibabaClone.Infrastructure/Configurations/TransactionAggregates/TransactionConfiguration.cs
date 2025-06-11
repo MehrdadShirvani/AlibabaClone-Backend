@@ -43,8 +43,8 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
 
             // Relationships
             builder.HasOne(t => t.TicketOrder)
-                .WithMany()
-                .HasForeignKey(t => t.TicketOrderId)
+                .WithOne(t => t.Transaction)
+                .HasForeignKey<Transaction>(t => t.TicketOrderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.Coupon)
