@@ -10,6 +10,6 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
         public string IBAN { get; set; }
         public string BankAccountNumber { get; set; }
         
-        public Account Account { get; set; }
+        public virtual Account Account { get; set; }
     }
 }
