@@ -38,6 +38,7 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IGenderRepository, GenderRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IBankAccountDetailRepository, BankAccountDetailRepository>();
 
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
