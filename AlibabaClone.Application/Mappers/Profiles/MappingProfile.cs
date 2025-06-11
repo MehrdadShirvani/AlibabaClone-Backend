@@ -59,6 +59,18 @@ namespace AlibabaClone.Application.Mappers.Profiles
                         .ForMember(dest => dest.TicketStatus, opt => opt.MapFrom(src => src.TicketStatus.Title))
                         .ForMember(dest => dest.CompanionName, opt => opt.MapFrom(src => src.Companion != null ? $"{src.Companion.FirstName} {src.Companion.LastName}" : ""))
                         .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
+
+            CreateMap<Person, PersonDto>()
+                        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                        .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                        .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                        .ForMember(dest => dest.IdNumber, opt => opt.MapFrom(src => src.IdNumber))
+                        .ForMember(dest => dest.GenderId, opt => opt.MapFrom(src => src.GenderId))
+                        .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                        .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.Birthdate))
+                        .ForMember(dest => dest.EnglishFirstName, opt => opt.MapFrom(src => src.EnglishFirstName))
+                        .ForMember(dest => dest.EnglishLastName, opt => opt.MapFrom(src => src.EnglishLastName))
+                        .ReverseMap();
         }
     }
 }
