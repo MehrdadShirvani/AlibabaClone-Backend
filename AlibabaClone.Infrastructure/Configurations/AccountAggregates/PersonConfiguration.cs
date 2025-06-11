@@ -31,6 +31,12 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
                 .HasMaxLength(20)
                 .IsUnicode(false);
 
+
+            builder.Property(a => a.PhoneNumber)
+                 .IsRequired(false)
+                 .IsUnicode(false)
+                 .HasMaxLength(20);
+
             builder.Property(p => p.EnglishFirstName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -38,6 +44,7 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
             builder.Property(p => p.EnglishLastName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+
 
             builder.Property(p => p.Birthdate)
                 .HasColumnType("date");

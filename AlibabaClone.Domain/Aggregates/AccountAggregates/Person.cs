@@ -16,6 +16,7 @@ namespace AlibabaClone.Domain.Aggregates.AccountAggregates
         
         public DateTime Birthdate { get; set; } 
         public short GenderId { get; set; }
+        public string? PhoneNumber { get; set; }
         public string? PassportNumber { get; set; }
         public string? EnglishFirstName { get; set; }
         public string? EnglishLastName { get; set; }
