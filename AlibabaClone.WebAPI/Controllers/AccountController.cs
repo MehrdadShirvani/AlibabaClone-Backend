@@ -107,10 +107,20 @@ namespace AlibabaClone.WebAPI.Controllers
         [HttpPut("email")]
         public async Task<IActionResult> EditEmail([FromBody] EditEmailDto dto)
         {
-            long userId = _userContext.GetUserId();
-            if (userId <= 0) return Unauthorized();
+            long accountId = _userContext.GetUserId();
+            if (accountId <= 0) return Unauthorized();
 
-            await _accountService.UpdateEmailAsync(userId, dto.NewEmail);
+            await _accountService.UpdateEmailAsync(accountId, dto.NewEmail);
+            return NoContent();
+        }
+
+        [HttpPut("password")]
+        public async Task<IActionResult> EditPassword([FromBody] EditPasswordDto dto)
+        {
+            long accountId = _userContext.GetUserId();
+            if (accountId <= 0) return Unauthorized();
+
+            await _accountService.UpdatePasswordAsync(accountId, dto.OldPassword ,dto.NewPassword);
             return NoContent();
         }
     }
