@@ -1,4 +1,5 @@
-﻿using AlibabaClone.Application.Interfaces;
+﻿using AlibabaClone.Application.DTOs.Account;
+using AlibabaClone.Application.Interfaces;
 using AlibabaClone.Application.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -100,6 +101,17 @@ namespace AlibabaClone.WebAPI.Controllers
                 ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
                 _ => StatusCode(500, result.ErrorMessage)
             };
+        }
+
+
+        [HttpPut("email")]
+        public async Task<IActionResult> EditEmail([FromBody] EditEmailDto dto)
+        {
+            long userId = _userContext.GetUserId();
+            if (userId <= 0) return Unauthorized();
+
+            await _accountService.UpdateEmailAsync(userId, dto.NewEmail);
+            return NoContent();
         }
     }
 }
