@@ -85,20 +85,20 @@ namespace AlibabaClone.Application.Services
             return Result<List<TransactionDto>>.NotFound(null);
         }
 
-        public async Task<Result<string>> UpdateEmailAsync(long accountId, string newEmail)
+        public async Task<Result<long>> UpdateEmailAsync(long accountId, string newEmail)
         {
-            var account = await _accountRepository.GetByEmailAsync(newEmail);
+            var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) throw new Exception("Account not found");
             var accountByNewEmail = await _accountRepository.GetByEmailAsync(newEmail);
             if (accountByNewEmail != null )
             {
                 if(accountByNewEmail.Id != accountId)
                 {
-                    return Result<string>.Error("", "Email is used by another account");
+                    return Result<long>.Error(account.Id, "Email is used by another account");
                 }
                 else
                 {
-                    return Result<string>.Success("");
+                    return Result<long>.Success(account.Id);
                 }
             }
 
@@ -106,7 +106,7 @@ namespace AlibabaClone.Application.Services
             account.Email = newEmail;
             _accountRepository.Update(account);
             await _unitOfWork.SaveChangesAsync();
-            return Result<string>.Success("");
+            return Result<long>.Success(account.Id);
         }
     }
 }
