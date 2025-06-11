@@ -124,6 +124,23 @@ namespace AlibabaClone.WebAPI.Controllers
             return NoContent();
         }
 
+        [HttpPost("account-person")]
+        public async Task<IActionResult> UpsertAccountPerson([FromBody] PersonDto dto)
+        {
+            long accountId = _userContext.GetUserId();
+            if (accountId <= 0) return Unauthorized();
+
+            var result = await _accountService.UpsertAccountPersonAsync(accountId, dto);
+            return result.Status switch
+            {
+                ResultStatus.Success => NoContent(),
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
+        }
+
         [HttpPost("person")]
         public async Task<IActionResult> UpsertPerson([FromBody] PersonDto dto)
         {
@@ -152,6 +169,28 @@ namespace AlibabaClone.WebAPI.Controllers
             return result.Status switch
             {
                 ResultStatus.Success => NoContent(),
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
+        }
+
+
+        [HttpGet("my-people")]
+        public async Task<IActionResult> GetMyPeople()
+        {
+            long userId = _userContext.GetUserId();
+            if (userId <= 0) return Unauthorized();
+
+            var result = await _accountService.GetPeople(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+
+            return result.Status switch
+            {
                 ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
                 ResultStatus.NotFound => NotFound(result.ErrorMessage),
                 ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
