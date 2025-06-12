@@ -7,7 +7,6 @@ using AlibabaClone.Domain.Aggregates.AccountAggregates;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
 using AutoMapper;
-using System.Security.Principal;
 
 namespace AlibabaClone.Application.Services
 {
@@ -85,6 +84,7 @@ namespace AlibabaClone.Application.Services
 
             var response = new AuthResponseDto
             {
+                Id = accountDto.Id,
                 PhoneNumber = accountDto.PhoneNumber,
                 Roles = accountDto.Roles,
             };
