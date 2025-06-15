@@ -19,7 +19,7 @@ namespace AlibabaClone.Infrastructure.Services.TransportationAggregates
             var list = await DbContext.TicketOrders
                                 .Include(x => x.Transaction)
                                 .Include(x => x.Transportation).ThenInclude(x=>x.FromLocation)
-                                .Include(x => x.Transportation).ThenInclude(x => x.ToLocationId)
+                                .Include(x => x.Transportation).ThenInclude(x => x.ToLocation)
                                 .Include(x => x.Transportation).ThenInclude(x => x.Company)
                                 .Include(x => x.Transportation).ThenInclude(x => x.Vehicle)
                                 .Where(x => x.BuyerId == buyerId).ToListAsync();
