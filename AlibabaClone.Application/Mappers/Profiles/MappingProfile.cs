@@ -1,8 +1,10 @@
 ﻿using AlibabaClone.Application.DTOs.Account;
 using AlibabaClone.Application.DTOs.City;
+using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Application.DTOs.Transportation;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
 using AlibabaClone.Domain.Aggregates.LocationAggregates;
+using AlibabaClone.Domain.Aggregates.TransactionAggregates;
 using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 using AutoMapper;
 
@@ -72,6 +74,10 @@ namespace AlibabaClone.Application.Mappers.Profiles
                         .ForMember(dest => dest.EnglishFirstName, opt => opt.MapFrom(src => src.EnglishFirstName))
                         .ForMember(dest => dest.EnglishLastName, opt => opt.MapFrom(src => src.EnglishLastName))
                         .ReverseMap();
+
+            CreateMap<Transaction, TransactionDto>()
+                        .ForMember(dest => dest.TransactionType, opt => opt.MapFrom(src => src.TransactionType.Title));
+
         }
     }
 }
