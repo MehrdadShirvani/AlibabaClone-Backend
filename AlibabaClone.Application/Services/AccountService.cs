@@ -10,7 +10,7 @@ using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
-using System.ComponentModel.DataAnnotations;
+using AlibabaClone.Domain.Aggregates.TransactionAggregates;
 
 namespace AlibabaClone.Application.Services
 {
@@ -262,6 +262,32 @@ namespace AlibabaClone.Application.Services
             await _unitOfWork.SaveChangesAsync();
 
             return Result<long>.Success(person.Id);
+        }
+
+        public async Task<Result<long>> TopUpAccount(long accountId, TopUpDto topUpDto)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null) return Result<long>.Error(0, "Account not found");
+            account.Deposit(topUpDto.Amount);
+            _accountRepository.Update(account);
+            
+            Transaction transaction = new Transaction()
+            {
+                AccountId = accountId,
+                CreatedAt = DateTime.UtcNow,    
+                Description = "Top-up at " + DateTime.UtcNow,
+                BaseAmount = topUpDto.Amount,
+                FinalAmount = topUpDto.Amount,
+                SerialNumber = Guid.NewGuid().ToString(),   
+                TransactionTypeId = 1,
+                CouponId = null,
+                TicketOrderId = null,
+            };
+
+            await _transactionRepository.AddAsync(transaction);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result<long>.Success(accountId);
         }
     }
 }
