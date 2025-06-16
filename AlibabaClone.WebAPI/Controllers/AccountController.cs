@@ -197,5 +197,30 @@ namespace AlibabaClone.WebAPI.Controllers
                 _ => StatusCode(500, result.ErrorMessage)
             };
         }
+
+
+        [HttpPost("top-up")]
+        public async Task<IActionResult> TopUpAccount(TopUpDto topUpDto)
+        {
+            if(topUpDto.Amount <= 0) return BadRequest("Amount should be positive");
+            long accountId = _userContext.GetUserId();
+            if (accountId <= 0) return Unauthorized();
+
+            var result = await _accountService.TopUpAccount(accountId, topUpDto);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+
+            return result.Status switch
+            {
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
+        }
+
+
     }
 }
