@@ -242,11 +242,16 @@ namespace AlibabaClone.Application.Services
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) return Result<long>.Error(0, "Account not found");
+
+
             Person person;
-            if (account.PersonId.HasValue)
+            person = (await _personRepository.FindAsync(x => x.IdNumber == dto.IdNumber && x.CreatorAccountId == accountId)).FirstOrDefault();
+            if (person != null)
             {
-                person = await _personRepository.GetByIdAsync(account.PersonId.Value);
-                if (person == null) return Result<long>.Error(0, "Person not found");
+                if (dto.Id > 0 && dto.Id != person.Id)
+                {
+                    return Result<long>.Error(0,"A person with this id number exists");
+                }
                 _mapper.Map(dto, person);
                 person.CreatorAccountId = account.Id;
                 person.Id = account.PersonId.Value;
@@ -255,7 +260,7 @@ namespace AlibabaClone.Application.Services
             else
             {
                 person = _mapper.Map<Person>(dto);
-                person.CreatorAccountId = account.Id;
+                person.CreatorAccountId = accountId;
                 await _personRepository.AddAsync(person);
             }
 
