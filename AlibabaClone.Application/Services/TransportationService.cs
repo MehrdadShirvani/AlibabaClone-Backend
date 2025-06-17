@@ -3,6 +3,7 @@ using AlibabaClone.Application.Interfaces;
 using AlibabaClone.Application.Result;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationRepositories;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.VehicleRepositories;
 using AutoMapper;
 
 namespace AlibabaClone.Application.Services
@@ -10,18 +11,24 @@ namespace AlibabaClone.Application.Services
     public class TransportationService : ITransportationService
     {
         private readonly ITransportationRepository _transportationRepository;
+        private readonly ISeatRepository _seatRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public TransportationService(
             ITransportationRepository transportationRepository,
             IMapper mapper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ISeatRepository seatRepository)
         {
             _transportationRepository = transportationRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _seatRepository = seatRepository;
         }
+
+
+
         public async Task<Result<IEnumerable<TransportationSearchResultDto>>> SearchTransportationsAsync(TransportationSearchRequestDto searchRequest)
         {
             var result = await _transportationRepository.SearchTransportationsAsync(
@@ -39,6 +46,22 @@ namespace AlibabaClone.Application.Services
             }
 
             return Result<IEnumerable<TransportationSearchResultDto>>.NotFound(null);
+        }
+
+        public async Task<Result<List<TransportationSeatDto>>> GetTransportationSeatsAsync(long transportationId)
+        {
+            var transportation = await _transportationRepository.GetByIdAsync(transportationId);
+            if (transportation == null) return Result<List<TransportationSeatDto>>.Error(null, "Transportation Not Found");
+            var result = await _seatRepository.GetSeatsByVehicleId(transportationId);
+
+
+            if (result == null || result.Any())
+            {
+                var transportationSeatDtos = _mapper.Map<List<TransportationSeatDto>>(result);
+                return Result<List<TransportationSeatDto>>.Success(transportationSeatDtos);
+            }
+
+            return Result<List<TransportationSeatDto>>.NotFound(null);
         }
     }
 }
