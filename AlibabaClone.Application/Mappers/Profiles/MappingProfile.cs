@@ -6,6 +6,7 @@ using AlibabaClone.Domain.Aggregates.AccountAggregates;
 using AlibabaClone.Domain.Aggregates.LocationAggregates;
 using AlibabaClone.Domain.Aggregates.TransactionAggregates;
 using AlibabaClone.Domain.Aggregates.TransportationAggregates;
+using AlibabaClone.Domain.Aggregates.VehicleAggregates;
 using AutoMapper;
 
 namespace AlibabaClone.Application.Mappers.Profiles
@@ -77,7 +78,10 @@ namespace AlibabaClone.Application.Mappers.Profiles
 
             CreateMap<Transaction, TransactionDto>()
                         .ForMember(dest => dest.TransactionType, opt => opt.MapFrom(src => src.TransactionType.Title));
-
+            CreateMap<Seat, TransportationSeatDto>()
+                        .ForMember(dest => dest.IsReserved, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1)))
+                        .ForMember(dest => dest.GenderId, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1)?(short?)null:
+                        src.Tickets.FirstOrDefault(x => x.TicketStatusId == 1).Traveler.GenderId));
         }
     }
 }
