@@ -13,18 +13,20 @@ namespace AlibabaClone.WebAPI.Controllers
     {
         private readonly IUserContext _userContext;
         private readonly IAccountService _accountService;
+        private readonly IPersonService _personService;
 
-        public AccountController(IUserContext userContext, IAccountService accountService)
+        public AccountController(IUserContext userContext, IAccountService accountService, IPersonService personService)
         {
             _userContext = userContext;
-            this._accountService = accountService;
+            _accountService = accountService;
+            _personService = personService;
         }
 
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
             long userId = _userContext.GetUserId();
-            if(userId <= 0) return Unauthorized();
+            if (userId <= 0) return Unauthorized();
             var result = await _accountService.GetProfileAsync(userId);
             if (result.IsSuccess)
             {
@@ -88,7 +90,7 @@ namespace AlibabaClone.WebAPI.Controllers
             long userId = _userContext.GetUserId();
             if (userId <= 0) return Unauthorized();
 
-            var result = await _accountService.GetTransactions(userId);
+            var result = await _accountService.GetAccountTransactions(userId);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);
@@ -120,7 +122,7 @@ namespace AlibabaClone.WebAPI.Controllers
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
 
-            await _accountService.UpdatePasswordAsync(accountId, dto.OldPassword ,dto.NewPassword);
+            await _accountService.UpdatePasswordAsync(accountId, dto.OldPassword, dto.NewPassword);
             return NoContent();
         }
 
@@ -130,7 +132,7 @@ namespace AlibabaClone.WebAPI.Controllers
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
 
-            var result = await _accountService.UpsertAccountPersonAsync(accountId, dto);
+            var result = await _personService.UpsertAccountPersonAsync(accountId, dto);
             return result.Status switch
             {
                 ResultStatus.Success => NoContent(),
@@ -147,7 +149,7 @@ namespace AlibabaClone.WebAPI.Controllers
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
 
-            var result = await _accountService.UpsertPersonAsync(accountId, dto);
+            var result = await _personService.UpsertPersonAsync(accountId, dto);
             return result.Status switch
             {
                 ResultStatus.Success => NoContent(),
@@ -202,7 +204,7 @@ namespace AlibabaClone.WebAPI.Controllers
         [HttpPost("top-up")]
         public async Task<IActionResult> TopUpAccount(TopUpDto topUpDto)
         {
-            if(topUpDto.Amount <= 0) return BadRequest("Amount should be positive");
+            if (topUpDto.Amount <= 0) return BadRequest("Amount should be positive");
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
 
