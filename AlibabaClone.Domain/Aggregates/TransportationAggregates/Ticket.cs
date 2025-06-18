@@ -19,7 +19,7 @@ namespace AlibabaClone.Domain.Aggregates.TransportationAggregates
         public DateTime? CanceledAt { get; set; }
         public long? CompanionId { get; set; }   
         public short TicketStatusId { get; set; }
-        public string SerialNumber { get; set; }
+        public string SerialNumber { get; protected set; }
         public string? Description { get; set; }
 
 

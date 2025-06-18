@@ -11,7 +11,6 @@ using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositor
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
 using AlibabaClone.Domain.Aggregates.TransactionAggregates;
-using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 
 namespace AlibabaClone.Application.Services
 {
@@ -23,7 +22,6 @@ namespace AlibabaClone.Application.Services
         private readonly ITicketOrderRepository _ticketOrderRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly ITransactionRepository _transactionRepository;
-        private readonly ITransactionService _transactionService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -34,8 +32,7 @@ namespace AlibabaClone.Application.Services
                               ITicketOrderRepository ticketOrderRepository,
                               ITicketRepository ticketRepository,
                               ITransactionRepository transactionRepository,
-                              IBankAccountDetailRepository bankAccountDetailRepository,
-                              ITransactionService transactionService)
+                              IBankAccountDetailRepository bankAccountDetailRepository)
         {
             _accountRepository = accountRepository;
             _personRepository = personRepository;
@@ -45,7 +42,6 @@ namespace AlibabaClone.Application.Services
             _ticketRepository = ticketRepository;
             _transactionRepository = transactionRepository;
             _bankAccountDetailRepository = bankAccountDetailRepository;
-            _transactionService = transactionService;
         }
 
         public async Task<Result<ProfileDto>> GetProfileAsync(long accountId)
@@ -86,7 +82,7 @@ namespace AlibabaClone.Application.Services
             return Result<List<TravelerTicketDto>>.NotFound(null);
         }
 
-        public async Task<Result<List<TransactionDto>>> GetAccountTransactions(long accountId)
+        public async Task<Result<List<TransactionDto>>> GetTransactions(long accountId)
         {
             var result = await _transactionRepository.GetAllByAccountIdAsync(accountId);
             if (result != null)
@@ -151,6 +147,38 @@ namespace AlibabaClone.Application.Services
             return hasDigit && hasLetter;
         }
 
+        public async Task<Result<long>> UpsertAccountPersonAsync(long accountId, PersonDto dto)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null) return Result<long>.Error(0,"Account not found");
+            Person person;
+            if(account.PersonId.HasValue)
+            {
+                person = await _personRepository.GetByIdAsync(account.PersonId.Value);
+                if (person == null) return Result<long>.Error(0, "Person not found");
+                _mapper.Map(dto, person);
+                person.CreatorAccountId = account.Id;
+                person.Id = account.PersonId.Value;
+                _personRepository.Update(person);
+            }
+            else
+            {
+                person = _mapper.Map<Person>(dto);
+                person.CreatorAccountId = account.Id;
+                await _personRepository.AddAsync(person);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            
+            account.PersonId = person.Id;
+            _accountRepository.Update(account);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result<long>.Success(person.Id);
+        }
+
+        
+
         public async Task<Result<long>> UpsertBankAccountDetailAsync(long accountId, UpsertBankAccountDetailDto dto)
         {
             var error = ValidateBankInfo(dto);
@@ -210,37 +238,61 @@ namespace AlibabaClone.Application.Services
             return Result<List<PersonDto>>.NotFound(null);
         }
 
+        public async Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null) return Result<long>.Error(0, "Account not found");
+
+
+            Person person;
+            person = (await _personRepository.FindAsync(x => x.IdNumber == dto.IdNumber && x.CreatorAccountId == accountId)).FirstOrDefault();
+            if (person != null)
+            {
+                if (dto.Id > 0 && dto.Id != person.Id)
+                {
+                    return Result<long>.Error(0,"A person with this id number exists");
+                }
+                _mapper.Map(dto, person);
+                person.CreatorAccountId = account.Id;
+                person.Id = account.PersonId.Value;
+                _personRepository.Update(person);
+            }
+            else
+            {
+                person = _mapper.Map<Person>(dto);
+                person.CreatorAccountId = accountId;
+                await _personRepository.AddAsync(person);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result<long>.Success(person.Id);
+        }
+
         public async Task<Result<long>> TopUpAccount(long accountId, TopUpDto topUpDto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) return Result<long>.Error(0, "Account not found");
             account.Deposit(topUpDto.Amount);
             _accountRepository.Update(account);
-            await _unitOfWork.SaveChangesAsync();
-            var transactionId = await _transactionService.CreateTopUpAsync(accountId, topUpDto.Amount);
-            return Result<long>.Success(transactionId.Data);
-        }
-
-        public async Task<Result<long>> PayForTicketOrderAsync(long accountId, long ticketOrderId, decimal price)
-        {
-            var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) return Result<long>.Error(0, "Account not found");
-            if(account.CurrentBalance < price) return Result<long>.Error(0, "Not enough money"); 
-            account.Withdraw(price);
-            _accountRepository.Update(account);
-            await _unitOfWork.SaveChangesAsync();
-
-            TransactionDto dto = new TransactionDto
+            
+            Transaction transaction = new Transaction()
             {
-                CreatedAt = DateTime.UtcNow,
-                Description = "",
-                BaseAmount = price,
-                FinalAmount = price,
-                SerialNumber = new Guid().ToString("N"),
-                TicketOrderId = ticketOrderId,
-                TransactionTypeId = 2,
+                AccountId = accountId,
+                CreatedAt = DateTime.UtcNow,    
+                Description = "Top-up at " + DateTime.UtcNow,
+                BaseAmount = topUpDto.Amount,
+                FinalAmount = topUpDto.Amount,
+                SerialNumber = Guid.NewGuid().ToString(),   
+                TransactionTypeId = 1,
+                CouponId = null,
+                TicketOrderId = null,
             };
-            return await _transactionService.CreateAsync(accountId, dto);
+
+            await _transactionRepository.AddAsync(transaction);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result<long>.Success(accountId);
         }
     }
 }

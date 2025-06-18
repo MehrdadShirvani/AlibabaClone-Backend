@@ -13,13 +13,11 @@ namespace AlibabaClone.WebAPI.Controllers
     {
         private readonly IUserContext _userContext;
         private readonly IAccountService _accountService;
-        private readonly IPersonService _personService;
 
-        public AccountController(IUserContext userContext, IAccountService accountService, IPersonService personService)
+        public AccountController(IUserContext userContext, IAccountService accountService)
         {
             _userContext = userContext;
-            _accountService = accountService;
-            _personService = personService;
+            this._accountService = accountService;
         }
 
         [HttpGet("profile")]
@@ -90,7 +88,7 @@ namespace AlibabaClone.WebAPI.Controllers
             long userId = _userContext.GetUserId();
             if (userId <= 0) return Unauthorized();
 
-            var result = await _accountService.GetAccountTransactions(userId);
+            var result = await _accountService.GetTransactions(userId);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);
@@ -132,7 +130,7 @@ namespace AlibabaClone.WebAPI.Controllers
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
 
-            var result = await _personService.UpsertAccountPersonAsync(accountId, dto);
+            var result = await _accountService.UpsertAccountPersonAsync(accountId, dto);
             return result.Status switch
             {
                 ResultStatus.Success => NoContent(),
@@ -149,7 +147,7 @@ namespace AlibabaClone.WebAPI.Controllers
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
 
-            var result = await _personService.UpsertPersonAsync(accountId, dto);
+            var result = await _accountService.UpsertPersonAsync(accountId, dto);
             return result.Status switch
             {
                 ResultStatus.Success => NoContent(),
