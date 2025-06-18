@@ -10,13 +10,13 @@ namespace AlibabaClone.Application.Interfaces
         Task<Result<ProfileDto>> GetProfileAsync(long accountId);
         Task<Result<List<TicketOrderSummaryDto>>> GetTravels(long accountId);
         Task<Result<List<TravelerTicketDto>>> GetTicketOrderTravelersDetails(long accountId, long ticketOrderId);
-        Task<Result<List<TransactionDto>>> GetTransactions(long accountId);
+        Task<Result<List<TransactionDto>>> GetAccountTransactions(long accountId);
         Task<Result<long>> UpdateEmailAsync(long accountId, string newEmail);
         Task<Result<long>> UpdatePasswordAsync(long accountId, string oldPassword, string newPassword);
-        Task<Result<long>> UpsertAccountPersonAsync(long accountId, PersonDto dto); // Returns PersonId
-        Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto); // Returns PersonId
+        
         Task<Result<long>> UpsertBankAccountDetailAsync(long accountId, UpsertBankAccountDetailDto dto);
         Task<Result<List<PersonDto>>> GetPeople(long accountId);
         Task<Result<long>> TopUpAccount(long accountId, TopUpDto topUpDto);
+        Task<Result<long>> PayForTicketOrderAsync(long accountId, long ticketOrderId, decimal price);
     }
 }

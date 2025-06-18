@@ -11,5 +11,6 @@
         public DateTime StartDateTime { get; init; }
         public DateTime? EndDateTime { get; init; }
         public decimal Price { get; init; } 
+        public int RemainingCapacity { get; init; }
     }
 }

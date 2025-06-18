@@ -9,7 +9,7 @@ namespace AlibabaClone.Domain.Aggregates.TransportationAggregates
         public long TransportationId { get; set; }
         public long BuyerId { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string SerialNumber { get; protected set; }
+        public string SerialNumber { get; set; }
         public string? Description { get; set; }
 
         public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
