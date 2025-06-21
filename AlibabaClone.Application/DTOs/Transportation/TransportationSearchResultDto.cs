@@ -3,6 +3,7 @@
     public class TransportationSearchResultDto
     {
         public long Id { get; init; }
+        public int VehicleTypeId { get; init; }   
         public required string CompanyTitle { get; init; }   
         public required string FromLocationTitle { get; init; }
         public required string ToLocationTitle { get; init; }
