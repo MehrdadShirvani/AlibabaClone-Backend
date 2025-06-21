@@ -18,8 +18,8 @@ namespace AlibabaClone.Application.DTOs.Transportation
         public string PhoneNumber { get; set; }
         [Required(ErrorMessage = "Birth date is required.")]
         public DateTime BirthDate { get; set; }
-        public string EnglishFirstName { get; set; }
-        public string EnglishLastName { get; set; }
+        public string? EnglishFirstName { get; set; }
+        public string? EnglishLastName { get; set; }
 
         public long? SeatId { get; set; }
         public bool IsVIP { get; set; }
