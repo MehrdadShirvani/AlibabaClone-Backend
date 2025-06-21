@@ -72,7 +72,6 @@ namespace AlibabaClone.Application.Services
                 }
                 _mapper.Map(dto, person);
                 person.CreatorAccountId = account.Id;
-                person.Id = account.PersonId.Value;
                 _personRepository.Update(person);
             }
             else
