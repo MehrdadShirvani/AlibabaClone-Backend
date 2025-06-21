@@ -16,6 +16,7 @@ namespace AlibabaClone.Application.Mappers.Profiles
         public MappingProfile()
         {
             CreateMap<Transportation, TransportationSearchResultDto>()
+                .ForMember(dest => dest.VehicleTypeId, opt => opt.MapFrom(src => src.Vehicle.VehicleTypeId))
                 .ForMember(dest => dest.CompanyTitle, opt => opt.MapFrom(src => src.Company.Title))
                 .ForMember(dest => dest.FromLocationTitle, opt => opt.MapFrom(src => src.FromLocation.Title))
                 .ForMember(dest => dest.ToLocationTitle, opt => opt.MapFrom(src => src.ToLocation.Title))
@@ -83,8 +84,8 @@ namespace AlibabaClone.Application.Mappers.Profiles
 
             CreateMap<Seat, TransportationSeatDto>()
                         .ForMember(dest => dest.IsReserved, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1)))
-                        .ForMember(dest => dest.GenderId, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1) ? (short?)null :
-                        src.Tickets.FirstOrDefault(x => x.TicketStatusId == 1).Traveler.GenderId));
+                        .ForMember(dest => dest.GenderId, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1) ?
+                        src.Tickets.FirstOrDefault(x => x.TicketStatusId == 1).Traveler.GenderId : (short?)null));
 
             CreateMap<CreateTravelerTicketDto, PersonDto>();
 
