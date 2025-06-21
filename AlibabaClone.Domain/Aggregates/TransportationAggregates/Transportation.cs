@@ -19,7 +19,11 @@ namespace AlibabaClone.Domain.Aggregates.TransportationAggregates
         public DateTime StartDateTime { get; set; } 
         public DateTime? EndDateTime { get; set; }
         public string SerialNumber { get; protected set; }
-        public int RemainingCapacity { get; protected set; }
+        public int RemainingCapacity =>
+            Vehicle.Capacity - TicketOrders?
+            .SelectMany(to => to.Tickets)
+            .Count(t => t.TicketStatusId == 1) ?? 0;
+
         public decimal BasePrice { get; set; }
         public decimal? VIPPrice { get; set; }  
 
