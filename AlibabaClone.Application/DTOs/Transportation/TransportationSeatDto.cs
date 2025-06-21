@@ -2,7 +2,7 @@
 {
     public class TransportationSeatDto
     {
-        public int VehicleId { get; set; }
+        public long Id { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
         public bool IsVIP { get; set; }
