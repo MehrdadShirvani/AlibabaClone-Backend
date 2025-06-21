@@ -49,9 +49,9 @@ namespace AlibabaClone.Application.Services
             _transactionService = transactionService;
             _accountService = accountService;
         }
-        public async Task<Result<long>> CreateTicketOrderAsync(CreateTicketOrderDto dto)
+        public async Task<Result<long>> CreateTicketOrderAsync(long accountId, CreateTicketOrderDto dto)
         {
-            var account = await _accountRepository.GetByIdAsync(dto.AccountId);
+            var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) return Result<long>.Error(0, "Account not found");
 
             var transportation = await _transportationRepository.GetByIdAsync(dto.TransportationId);
@@ -70,7 +70,7 @@ namespace AlibabaClone.Application.Services
                 BuyerId = account.Id,
                 CreatedAt = DateTime.UtcNow,
                 Description = "",
-                SerialNumber = new Guid().ToString("N"),
+                SerialNumber = Guid.NewGuid().ToString("N"),
                 TransportationId = dto.TransportationId,
             };
             await _ticketOrderRepository.AddAsync(ticketOrder);
@@ -82,12 +82,12 @@ namespace AlibabaClone.Application.Services
                     CreatedAt = DateTime.UtcNow,
                     Description = traveler.Description,
                     SeatId = traveler.SeatId.Value,
-                    SerialNumber = new Guid().ToString("N"),
+                    SerialNumber = Guid.NewGuid().ToString("N"),
                     TicketOrder = ticketOrder,
                     TicketStatusId = 1,
                     TravelerId = traveler.Id,
                 };
-                _ticketRepository.AddAsync(ticket);
+                await _ticketRepository.AddAsync(ticket);
             }
 
             await _unitOfWork.SaveChangesAsync();
@@ -118,7 +118,7 @@ namespace AlibabaClone.Application.Services
             var allSeats = await _seatRepository.GetSeatsByVehicleId(vehicleId);
             var reservedSeats = allSeats.Where(x => x.Tickets.Any(y => y.TicketStatusId == 1));
 
-            if (vehicleId == 1)
+            if (vehicleId == 1)//vehicleId == 1
             {
                 var seatIdsToReserve = travelers.Select(x => x.SeatId.Value).ToList();
                 if (seatIdsToReserve.Intersect(reservedSeats.Select(x => x.Id)).Any())
