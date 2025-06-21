@@ -236,7 +236,7 @@ namespace AlibabaClone.Application.Services
                 Description = "",
                 BaseAmount = price,
                 FinalAmount = price,
-                SerialNumber = new Guid().ToString("N"),
+                SerialNumber = Guid.NewGuid().ToString("N"),
                 TicketOrderId = ticketOrderId,
                 TransactionTypeId = 2,
             };
