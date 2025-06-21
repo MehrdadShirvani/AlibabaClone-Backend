@@ -67,6 +67,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITicketOrderService, TicketOrderService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 
