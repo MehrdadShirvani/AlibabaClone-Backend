@@ -18,9 +18,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="QuestPDF" Version="2025.5.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AlibabaClone.Application\AlibabaClone.Application.csproj" />
     <ProjectReference Include="..\AlibabaClone.Domain\AlibabaClone.Domain.csproj" />
   </ItemGroup>
 
