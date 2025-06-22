@@ -5,6 +5,7 @@ namespace AlibabaClone.Application.Interfaces
 {
     public interface ITicketOrderService
     {
-        public Task<Result<long>> CreateTicketOrderAsync(long accountId,CreateTicketOrderDto createTicketOrderDto);
+        Task<Result<long>> CreateTicketOrderAsync(long accountId,CreateTicketOrderDto createTicketOrderDto);
+        Task<Result<byte[]>> GenerateTicketsPdfAsync(long accountId, long ticketOrderId);
     }
 }

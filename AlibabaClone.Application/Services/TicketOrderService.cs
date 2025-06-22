@@ -24,6 +24,8 @@ namespace AlibabaClone.Application.Services
         IPersonService _personService;
         ITransactionService _transactionService;
         IAccountService _accountService;
+        IPdfGenerator _pdfGeneratorService;
+
         IMapper _mapper;
         public TicketOrderService(ITicketOrderRepository ticketOrderRepository,
                                   ITicketRepository ticketRepository,
@@ -35,7 +37,8 @@ namespace AlibabaClone.Application.Services
                                   IPersonService personService,
                                   ITransactionService transactionService,
                                   IMapper mapper,
-                                  IAccountService accountService)
+                                  IAccountService accountService,
+                                  IPdfGenerator pdfGeneratorService)
         {
             _ticketOrderRepository = ticketOrderRepository;
             _ticketRepository = ticketRepository;
@@ -48,6 +51,7 @@ namespace AlibabaClone.Application.Services
             _personService = personService;
             _transactionService = transactionService;
             _accountService = accountService;
+            _pdfGeneratorService = pdfGeneratorService;
         }
         public async Task<Result<long>> CreateTicketOrderAsync(long accountId, CreateTicketOrderDto dto)
         {
@@ -146,5 +150,16 @@ namespace AlibabaClone.Application.Services
             return "";
         }
 
+        public async Task<Result<byte[]>> GenerateTicketsPdfAsync(long accountId, long ticketOrderId)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null) return Result<byte[]>.Error(null, "Account not found");
+
+            var ticketOrder = await _ticketOrderRepository.FindAndLoadAllDetails(ticketOrderId);
+            if (ticketOrder == null) return Result<byte[]>.Error(null, "Transportation not found");
+            if (ticketOrder.BuyerId != accountId) return Result<byte[]>.Error(null, "Wrong Transportation");
+            var data = _pdfGeneratorService.GenerateTicketsPdf(ticketOrder);
+            return Result<byte[]>.Success(data);
+        }
     }
 }
