@@ -10,6 +10,7 @@ using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationReposi
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.VehicleRepositories;
 using AlibabaClone.Infrastructure;
 using AlibabaClone.Infrastructure.Framework.Base;
+using AlibabaClone.Infrastructure.Services;
 using AlibabaClone.Infrastructure.Services.AccountAggregates;
 using AlibabaClone.Infrastructure.Services.CompanyAggregates;
 using AlibabaClone.Infrastructure.Services.TransactionAggregates;
@@ -18,10 +19,12 @@ using AlibabaClone.Infrastructure.Services.VehicleAggregates;
 using AlibabaClone.WebAPI.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using QuestPDF.Infrastructure;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+QuestPDF.Settings.License = LicenseType.Community;
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -70,6 +73,7 @@ builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
+builder.Services.AddScoped<IPdfGenerator, PdfGenerator>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
