@@ -32,7 +32,7 @@ namespace AlibabaClone.WebAPI.Controllers
             var result = await _ticketOrderService.CreateTicketOrderAsync(accountId, dto);
             return result.Status switch
             {
-                ResultStatus.Success => Ok(result),
+                ResultStatus.Success => Ok(result.Data),
                 ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
                 ResultStatus.NotFound => NotFound(result.ErrorMessage),
                 ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
@@ -40,5 +40,23 @@ namespace AlibabaClone.WebAPI.Controllers
             };
 
         }
+
+        [HttpGet("{ticketOrderId}/pdf")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> DownloadPdf(long ticketOrderId)
+        {
+            long accountId = _userContext.GetUserId();
+            if (accountId <= 0) return Unauthorized();
+            var result = await _ticketOrderService.GenerateTicketsPdfAsync(accountId, ticketOrderId);
+            return result.Status switch
+            {
+                ResultStatus.Success => File(result.Data, "application/pdf", $"ticket-{ticketOrderId}.pdf"),
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
+        }
+
     }
 }
