@@ -233,7 +233,7 @@ namespace AlibabaClone.Application.Services
             TransactionDto dto = new TransactionDto
             {
                 CreatedAt = DateTime.UtcNow,
-                Description = "",
+                Description = "Withdraw money to pay for ticket order: " + ticketOrderId,
                 BaseAmount = price,
                 FinalAmount = price,
                 SerialNumber = Guid.NewGuid().ToString("N"),
