@@ -122,7 +122,7 @@ namespace AlibabaClone.Application.Services
             var allSeats = await _seatRepository.GetSeatsByVehicleId(vehicleId);
             var reservedSeats = allSeats.Where(x => x.Tickets.Any(y => y.TicketStatusId == 1));
 
-            if (vehicleId == 1)//vehicleId == 1
+            if (vehicleId == 1) 
             {
                 var seatIdsToReserve = travelers.Select(x => x.SeatId.Value).ToList();
                 if (seatIdsToReserve.Intersect(reservedSeats.Select(x => x.Id)).Any())
