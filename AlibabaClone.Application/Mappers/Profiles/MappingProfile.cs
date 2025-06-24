@@ -17,6 +17,7 @@ namespace AlibabaClone.Application.Mappers.Profiles
         {
             CreateMap<Transportation, TransportationSearchResultDto>()
                 .ForMember(dest => dest.VehicleTypeId, opt => opt.MapFrom(src => src.Vehicle.VehicleTypeId))
+                .ForMember(dest => dest.VehicleTitle, opt => opt.MapFrom(src => src.Vehicle.Title))
                 .ForMember(dest => dest.CompanyTitle, opt => opt.MapFrom(src => src.Company.Title))
                 .ForMember(dest => dest.FromLocationTitle, opt => opt.MapFrom(src => src.FromLocation.Title))
                 .ForMember(dest => dest.ToLocationTitle, opt => opt.MapFrom(src => src.ToLocation.Title))
