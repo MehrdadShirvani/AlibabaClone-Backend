@@ -112,8 +112,16 @@ namespace AlibabaClone.WebAPI.Controllers
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
 
-            await _accountService.UpdateEmailAsync(accountId, dto.NewEmail);
-            return NoContent();
+            var result = await _accountService.UpdateEmailAsync(accountId, dto.NewEmail);
+            return result.Status switch
+            {
+                ResultStatus.Success => NoContent(),
+                ResultStatus.Error => BadRequest(result.ErrorMessage),
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
         }
 
         [HttpPut("password")]
@@ -122,8 +130,16 @@ namespace AlibabaClone.WebAPI.Controllers
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
 
-            await _accountService.UpdatePasswordAsync(accountId, dto.OldPassword, dto.NewPassword);
-            return NoContent();
+            var result = await _accountService.UpdatePasswordAsync(accountId, dto.OldPassword, dto.NewPassword);
+            return result.Status switch
+            {
+                ResultStatus.Success => NoContent(),
+                ResultStatus.Error => BadRequest(result.ErrorMessage),
+                ResultStatus.Unauthorized => Unauthorized(result.ErrorMessage),
+                ResultStatus.NotFound => NotFound(result.ErrorMessage),
+                ResultStatus.ValidationError => BadRequest(result.ErrorMessage),
+                _ => StatusCode(500, result.ErrorMessage)
+            };
         }
 
         [HttpPost("account-person")]
