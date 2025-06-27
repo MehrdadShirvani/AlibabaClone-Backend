@@ -221,12 +221,12 @@ namespace AlibabaClone.Application.Services
             return Result<long>.Success(transactionId.Data);
         }
 
-        public async Task<Result<long>> PayForTicketOrderAsync(long accountId, long ticketOrderId, decimal price)
+        public async Task<Result<long>> PayForTicketOrderAsync(long accountId, long ticketOrderId, decimal baseAmount, decimal finalAmount, long? couponId)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) return Result<long>.Error(0, "Account not found");
-            if (account.CurrentBalance < price) return Result<long>.Error(0, "Not enough money");
-            account.Withdraw(price);
+            if (account.CurrentBalance < finalAmount) return Result<long>.Error(0, "Not enough money");
+            account.Withdraw(finalAmount);
             _accountRepository.Update(account);
             await _unitOfWork.SaveChangesAsync();
 
@@ -234,12 +234,14 @@ namespace AlibabaClone.Application.Services
             {
                 CreatedAt = DateTime.UtcNow,
                 Description = "Withdraw money to pay for ticket order: " + ticketOrderId,
-                BaseAmount = price,
-                FinalAmount = price,
+                BaseAmount = baseAmount,
+                FinalAmount = finalAmount,
                 SerialNumber = Guid.NewGuid().ToString("N"),
                 TicketOrderId = ticketOrderId,
                 TransactionTypeId = 2,
+                CouponId = couponId,
             };
+
             return await _transactionService.CreateAsync(accountId, dto);
         }
     }

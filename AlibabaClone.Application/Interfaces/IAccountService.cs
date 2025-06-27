@@ -16,6 +16,6 @@ namespace AlibabaClone.Application.Interfaces
         Task<Result<long>> UpsertBankAccountDetailAsync(long accountId, UpsertBankAccountDetailDto dto);
         Task<Result<List<PersonDto>>> GetPeople(long accountId);
         Task<Result<long>> TopUpAccount(long accountId, TopUpDto topUpDto);
-        Task<Result<long>> PayForTicketOrderAsync(long accountId, long ticketOrderId, decimal price);
+        Task<Result<long>> PayForTicketOrderAsync(long accountId, long ticketOrderId, decimal baseAmount, decimal finalAmount, long? couponId);
     }
 }
