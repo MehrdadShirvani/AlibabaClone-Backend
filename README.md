@@ -214,7 +214,6 @@ This app uses the **Repository Pattern** and **Unit of Work** to encapsulate dat
         - **Atomicity across multiple repositories**
 
 ### 4. **Presentation Layer (API)**
-[IMAAGE OF SWAGGER]
 
 **Description:**  
 This layer contains the **HTTP API** controllers that expose the application's features to clients like the React frontend, mobile apps, or third-party services.
