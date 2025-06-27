@@ -6,6 +6,7 @@ using AlibabaClone.Application.Result;
 using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
+using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationRepositories;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.VehicleRepositories;
 using AutoMapper;
@@ -20,10 +21,12 @@ namespace AlibabaClone.Application.Services
         ITicketRepository _ticketRepository;
         ITransportationRepository _transportationRepository;
         ISeatRepository _seatRepository;
+        ICouponRepository _couponRepository;
         IUnitOfWork _unitOfWork;
         IPersonService _personService;
         ITransactionService _transactionService;
         IAccountService _accountService;
+        ICouponService _couponService;
         IPdfGenerator _pdfGeneratorService;
 
         IMapper _mapper;
@@ -38,7 +41,9 @@ namespace AlibabaClone.Application.Services
                                   ITransactionService transactionService,
                                   IMapper mapper,
                                   IAccountService accountService,
-                                  IPdfGenerator pdfGeneratorService)
+                                  IPdfGenerator pdfGeneratorService,
+                                  ICouponService couponService,
+                                  ICouponRepository couponRepository)
         {
             _ticketOrderRepository = ticketOrderRepository;
             _ticketRepository = ticketRepository;
@@ -52,6 +57,8 @@ namespace AlibabaClone.Application.Services
             _transactionService = transactionService;
             _accountService = accountService;
             _pdfGeneratorService = pdfGeneratorService;
+            _couponService = couponService;
+            _couponRepository = couponRepository;
         }
         public async Task<Result<long>> CreateTicketOrderAsync(long accountId, CreateTicketOrderDto dto)
         {
@@ -60,11 +67,22 @@ namespace AlibabaClone.Application.Services
 
             var transportation = await _transportationRepository.GetByIdAsync(dto.TransportationId);
             if (transportation == null) return Result<long>.Error(0, "Transportation not found");
-            var price = transportation.BasePrice * dto.Travelers.Count;
-            if (account.CurrentBalance < price) return Result<long>.Error(0, "Not enough money");
+            var baseAmount = transportation.BasePrice * dto.Travelers.Count;
+            if (account.CurrentBalance < baseAmount) return Result<long>.Error(0, "Not enough money");
             var seatCheck = ValidateTransportationAndSeats(transportation, dto.Travelers);
             if (!string.IsNullOrEmpty(seatCheck)) return Result<long>.Error(0, seatCheck);
-
+            var finalAmount = baseAmount;
+            long? couponId = null;
+            if(!string.IsNullOrEmpty(dto.CouponCode))
+            {
+                var couponCheck = await _couponService.ValidateCouponAsync(accountId, new CouponValidationRequestDto { Code = dto.CouponCode, OriginalPrice = baseAmount });
+                if(couponCheck.IsSuccess == false || (couponCheck.Data?.IsValid ?? false) == false)
+                {
+                    return Result<long>.Error(0, "Coupon code not valid");
+                }
+                finalAmount = baseAmount - couponCheck.Data.DiscountAmount;
+                couponId = (await _couponRepository.GetByCodeAsync(dto.CouponCode)).Id;
+            }
 
             await AssignSeatsIfDynamic(transportation.VehicleId, dto.Travelers);
             await UpsertTravelers(account.Id, dto.Travelers);
@@ -95,7 +113,7 @@ namespace AlibabaClone.Application.Services
             }
 
             await _unitOfWork.SaveChangesAsync();
-            await _accountService.PayForTicketOrderAsync(account.Id, ticketOrder.Id, price);
+            await _accountService.PayForTicketOrderAsync(account.Id, ticketOrder.Id, baseAmount, finalAmount, couponId);
             return Result<long>.Success(ticketOrder.Id);
         }
 
