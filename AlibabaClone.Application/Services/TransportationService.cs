@@ -52,7 +52,7 @@ namespace AlibabaClone.Application.Services
         {
             var transportation = await _transportationRepository.GetByIdAsync(transportationId);
             if (transportation == null) return Result<List<TransportationSeatDto>>.Error(null, "Transportation Not Found");
-            var result = await _seatRepository.GetSeatsByVehicleId(transportationId);
+            var result = await _seatRepository.GetSeatsByVehicleId(transportation.VehicleId);
 
 
             if (result == null || result.Any())
