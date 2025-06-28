@@ -10,7 +10,8 @@ using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
-using System.ComponentModel.DataAnnotations;
+using AlibabaClone.Domain.Aggregates.TransactionAggregates;
+using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 
 namespace AlibabaClone.Application.Services
 {
@@ -22,6 +23,7 @@ namespace AlibabaClone.Application.Services
         private readonly ITicketOrderRepository _ticketOrderRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly ITransactionService _transactionService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -32,7 +34,8 @@ namespace AlibabaClone.Application.Services
                               ITicketOrderRepository ticketOrderRepository,
                               ITicketRepository ticketRepository,
                               ITransactionRepository transactionRepository,
-                              IBankAccountDetailRepository bankAccountDetailRepository)
+                              IBankAccountDetailRepository bankAccountDetailRepository,
+                              ITransactionService transactionService)
         {
             _accountRepository = accountRepository;
             _personRepository = personRepository;
@@ -42,16 +45,17 @@ namespace AlibabaClone.Application.Services
             _ticketRepository = ticketRepository;
             _transactionRepository = transactionRepository;
             _bankAccountDetailRepository = bankAccountDetailRepository;
+            _transactionService = transactionService;
         }
 
         public async Task<Result<ProfileDto>> GetProfileAsync(long accountId)
         {
-            var result  = await _accountRepository.GetProfileAsync(accountId);
+            var result = await _accountRepository.GetProfileAsync(accountId);
             if (result != null)
             {
                 return Result<ProfileDto>.Success(_mapper.Map<ProfileDto>(result));
             }
-         
+
             return Result<ProfileDto>.NotFound(null);
         }
 
@@ -71,7 +75,7 @@ namespace AlibabaClone.Application.Services
             var result = await _ticketRepository.GetAllTicketsByTicketOrderId(ticketOrderId);
             if (result != null)
             {
-                if(result.Count > 0 && result.First().TicketOrder.BuyerId != accountId)
+                if (result.Count > 0 && result.First().TicketOrder.BuyerId != accountId)
                 {
                     return Result<List<TravelerTicketDto>>.Unauthorized(null);
                 }
@@ -82,7 +86,7 @@ namespace AlibabaClone.Application.Services
             return Result<List<TravelerTicketDto>>.NotFound(null);
         }
 
-        public async Task<Result<List<TransactionDto>>> GetTransactions(long accountId)
+        public async Task<Result<List<TransactionDto>>> GetAccountTransactions(long accountId)
         {
             var result = await _transactionRepository.GetAllByAccountIdAsync(accountId);
             if (result != null)
@@ -98,9 +102,9 @@ namespace AlibabaClone.Application.Services
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) throw new Exception("Account not found");
             var accountByNewEmail = await _accountRepository.GetByEmailAsync(newEmail);
-            if (accountByNewEmail != null )
+            if (accountByNewEmail != null)
             {
-                if(accountByNewEmail.Id != accountId)
+                if (accountByNewEmail.Id != accountId)
                 {
                     return Result<long>.Error(account.Id, "Email is used by another account");
                 }
@@ -147,42 +151,10 @@ namespace AlibabaClone.Application.Services
             return hasDigit && hasLetter;
         }
 
-        public async Task<Result<long>> UpsertAccountPersonAsync(long accountId, PersonDto dto)
-        {
-            var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) return Result<long>.Error(0,"Account not found");
-            Person person;
-            if(account.PersonId.HasValue)
-            {
-                person = await _personRepository.GetByIdAsync(account.PersonId.Value);
-                if (person == null) return Result<long>.Error(0, "Person not found");
-                _mapper.Map(dto, person);
-                person.CreatorAccountId = account.Id;
-                person.Id = account.PersonId.Value;
-                _personRepository.Update(person);
-            }
-            else
-            {
-                person = _mapper.Map<Person>(dto);
-                person.CreatorAccountId = account.Id;
-                await _personRepository.AddAsync(person);
-            }
-
-            await _unitOfWork.SaveChangesAsync();
-            
-            account.PersonId = person.Id;
-            _accountRepository.Update(account);
-            await _unitOfWork.SaveChangesAsync();
-
-            return Result<long>.Success(person.Id);
-        }
-
-        
-
         public async Task<Result<long>> UpsertBankAccountDetailAsync(long accountId, UpsertBankAccountDetailDto dto)
         {
             var error = ValidateBankInfo(dto);
-            if(string.IsNullOrEmpty(error) == false)
+            if (string.IsNullOrEmpty(error) == false)
             {
                 return Result<long>.Error(0, error);
             }
@@ -215,7 +187,7 @@ namespace AlibabaClone.Application.Services
 
         private string ValidateBankInfo(UpsertBankAccountDetailDto dto)
         {
-            if (!string.IsNullOrEmpty(dto.IBAN) && dto.IBAN.Length != 24 && dto.IBAN.Any(x=> char.IsDigit(x) == false))
+            if (!string.IsNullOrEmpty(dto.IBAN) && dto.IBAN.Length != 24 && dto.IBAN.Any(x => char.IsDigit(x) == false))
                 return "IBAN must be 24 digits";
 
             if (!string.IsNullOrEmpty(dto.CardNumber))
@@ -238,30 +210,39 @@ namespace AlibabaClone.Application.Services
             return Result<List<PersonDto>>.NotFound(null);
         }
 
-        public async Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto)
+        public async Task<Result<long>> TopUpAccount(long accountId, TopUpDto topUpDto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) return Result<long>.Error(0, "Account not found");
-            Person person;
-            if (account.PersonId.HasValue)
-            {
-                person = await _personRepository.GetByIdAsync(account.PersonId.Value);
-                if (person == null) return Result<long>.Error(0, "Person not found");
-                _mapper.Map(dto, person);
-                person.CreatorAccountId = account.Id;
-                person.Id = account.PersonId.Value;
-                _personRepository.Update(person);
-            }
-            else
-            {
-                person = _mapper.Map<Person>(dto);
-                person.CreatorAccountId = account.Id;
-                await _personRepository.AddAsync(person);
-            }
+            account.Deposit(topUpDto.Amount);
+            _accountRepository.Update(account);
+            await _unitOfWork.SaveChangesAsync();
+            var transactionId = await _transactionService.CreateTopUpAsync(accountId, topUpDto.Amount);
+            return Result<long>.Success(transactionId.Data);
+        }
 
+        public async Task<Result<long>> PayForTicketOrderAsync(long accountId, long ticketOrderId, decimal baseAmount, decimal finalAmount, long? couponId)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null) return Result<long>.Error(0, "Account not found");
+            if (account.CurrentBalance < finalAmount) return Result<long>.Error(0, "Not enough money");
+            account.Withdraw(finalAmount);
+            _accountRepository.Update(account);
             await _unitOfWork.SaveChangesAsync();
 
-            return Result<long>.Success(person.Id);
+            TransactionDto dto = new TransactionDto
+            {
+                CreatedAt = DateTime.UtcNow,
+                Description = "Withdraw money to pay for ticket order: " + ticketOrderId,
+                BaseAmount = baseAmount,
+                FinalAmount = finalAmount,
+                SerialNumber = Guid.NewGuid().ToString("N"),
+                TicketOrderId = ticketOrderId,
+                TransactionTypeId = 2,
+                CouponId = couponId,
+            };
+
+            return await _transactionService.CreateAsync(accountId, dto);
         }
     }
 }

@@ -28,11 +28,11 @@ namespace AlibabaClone.Infrastructure.Services.TransportationAggregates
                 .Include(x => x.ToLocation).ThenInclude(x => x.City)
                 .Include(x => x.Company)
                 .AsQueryable();
-            query = query.Where(x => vehicleTypeId == null || x.Vehicle.VehicleTypeId == vehicleTypeId.Value);
-            query = query.Where(x => fromCityId == null || x.FromLocation.CityId == fromCityId.Value);
-            query = query.Where(x => toCityId == null || x.ToLocation.CityId == toCityId.Value);
-            query = query.Where(x => startDate == null || x.StartDateTime.Date == startDate.Value.Date);
-            query = query.Where(x => endDate == null || (x.EndDateTime.HasValue && x.EndDateTime.Value == endDate.Value.Date));
+            //query = query.Where(x => vehicleTypeId == null || x.Vehicle.VehicleTypeId == vehicleTypeId.Value);
+            //query = query.Where(x => fromCityId == null || x.FromLocation.CityId == fromCityId.Value);
+            //query = query.Where(x => toCityId == null || x.ToLocation.CityId == toCityId.Value);
+            //query = query.Where(x => startDate == null || x.StartDateTime.Date == startDate.Value.Date);
+            //query = query.Where(x => endDate == null || (x.EndDateTime.HasValue && x.EndDateTime.Value == endDate.Value.Date));
             
             return await query.ToListAsync();
         }

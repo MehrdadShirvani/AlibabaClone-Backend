@@ -4,6 +4,6 @@ namespace AlibabaClone.Domain.Framework.Interfaces.Repositories.VehicleRepositor
 {
     public interface ISeatRepository : IRepository<Seat, long>
     {
-
+        Task<List<Seat>> GetSeatsByVehicleId(long transportationId);
     }
 }

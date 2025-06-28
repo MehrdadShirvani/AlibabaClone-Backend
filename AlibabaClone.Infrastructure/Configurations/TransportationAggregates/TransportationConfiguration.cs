@@ -35,8 +35,9 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            builder.Property(t => t.RemainingCapacity)
-                .IsRequired();
+
+
+            builder.Ignore(t => t.RemainingCapacity);
 
             builder.Property(t => t.BasePrice)
                 .HasColumnType("decimal(18,2)")
