@@ -1,8 +1,10 @@
 ﻿using AlibabaClone.Application.Interfaces;
 using AlibabaClone.Domain.Aggregates.TransportationAggregates;
+using QuestPDF.Companion;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.Net.Sockets;
 
 namespace AlibabaClone.Infrastructure.Services
 {
@@ -17,6 +19,8 @@ namespace AlibabaClone.Infrastructure.Services
             {
 
                 document.GeneratePdf(stream);
+                //document.ShowInCompanion();
+                //document.ShowInCompanion();   
             }
             catch (Exception e)
             {
@@ -45,6 +49,9 @@ public class TicketOrderDocument : IDocument
 
         public void Compose(IDocumentContainer container)
         {
+            foreach(Ticket ticket in TicketOrder.Tickets)
+            {
+
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
@@ -54,7 +61,7 @@ public class TicketOrderDocument : IDocument
                 page.Content().Column(column =>
                 {
                     column.Item().Text($"Order #{TicketOrder.Id}")
-                        .FontSize(20).Bold().FontColor(Colors.Blue.Darken2);
+                        .FontSize(17).Bold().FontColor(Colors.Blue.Darken2);
 
                     //column.Item();
 
@@ -73,19 +80,17 @@ public class TicketOrderDocument : IDocument
                         // Header row
                         table.Header(header =>
                         {
-                            header.Cell().Element(CellStyle).Text("Ticket #");
-                            header.Cell().Element(CellStyle).Text("Route");
-                            header.Cell().Element(CellStyle).Text("Seat");
-                            header.Cell().Element(CellStyle).Text("Date/Time");
-                            header.Cell().Element(CellStyle).Text("Price");
+                            header.Cell().Element(HeaderStyle).Text("Ticket #");
+                            header.Cell().Element(HeaderStyle).Text("Route");
+                            header.Cell().Element(HeaderStyle).Text("Seat");
+                            header.Cell().Element(HeaderStyle).Text("Date/Time");
+                            header.Cell().Element(HeaderStyle).Text("Price");
                         });
 
                         // Data rows
-                        foreach (var ticket in TicketOrder.Tickets)
-                        {
                             var t = TicketOrder.Transportation;
                             string route = $"{t.FromLocation.City.Title} → {t.ToLocation.City.Title}";
-                            string seat = $"{ticket.Seat.Row}-{ticket.Seat.Column}";
+                            string seat = $"{ticket.Seat.Id}";
                             string dt = $"{t.StartDateTime:yyyy/MM/dd HH:mm:ss}";
                             string price = $"{t.BasePrice:C}";
 
@@ -94,18 +99,46 @@ public class TicketOrderDocument : IDocument
                             table.Cell().Element(CellStyle).Text(seat);
                             table.Cell().Element(CellStyle).Text(dt);
                             table.Cell().Element(CellStyle).Text(price).AlignRight();
-                        }
                     });
+
+                    column.Item().Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                        });
+
+                        table.Header(header =>
+                        {
+                            header.Cell().Element(HeaderStyle).Text("Full Name");
+                            header.Cell().Element(HeaderStyle).Text("Phone Number");
+                            header.Cell().Element(HeaderStyle).Text("National Id");
+                        });
+
+
+                        table.Cell().Element(CellStyle).Text($"{ticket.Traveler.FirstName} {ticket.Traveler.LastName}");
+                        table.Cell().Element(CellStyle).Text($"{ticket.Traveler.PhoneNumber}");
+                        table.Cell().Element(CellStyle).Text($"{ticket.Traveler.IdNumber}");
+                    });
+
                 });
 
             });
+            }
         }
 
+        static IContainer HeaderStyle(IContainer container) =>
+            container.Padding(5)
+                     //.BorderBottom(1)
+                     .BorderColor(Colors.Grey.Lighten2)
+                     .DefaultTextStyle(x => x.Bold());
         static IContainer CellStyle(IContainer container) =>
             container.Padding(5)
                      .BorderBottom(1)
                      .BorderColor(Colors.Grey.Lighten2)
-                     .DefaultTextStyle(x => x.SemiBold());
+                     .DefaultTextStyle(x => x.Bold());
     }
 
 }
