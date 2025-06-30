@@ -44,7 +44,9 @@ Contains the **Enterprise Business Rules** – the core of the system. This laye
 - **Interfaces:** Contracts like `IEntity<TKey>`, `IRepository<T>`
     
 **Domain Modeling Details:**
-![ERD](./assets/ERD.png)
+
+![ERD](https://github.com/user-attachments/assets/4694eefe-470e-47ba-8197-caa1086abfe9)
+
 
 - ✅ ERD follows **Third Normal Form (3NF)** to avoid redundancy and ensure referential integrity.
 - ✅ Uses a **Code-First Approach**: database schema generated from C# model classes.
