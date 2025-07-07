@@ -87,6 +87,8 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserContext, UserContext>();
 
+builder.Services.AddSingleton<ITransportationLockService, TransportationLockService>();
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
