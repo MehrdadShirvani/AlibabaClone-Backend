@@ -48,6 +48,7 @@ namespace AlibabaClone.WebAPI.Controllers
             long accountId = _userContext.GetUserId();
             if (accountId <= 0) return Unauthorized();
             var result = await _ticketOrderService.GenerateTicketsPdfAsync(accountId, ticketOrderId);
+            if (result.Data == null) return BadRequest(result.ErrorMessage);
             return result.Status switch
             {
                 ResultStatus.Success => File(result.Data, "application/pdf", $"ticket-{ticketOrderId}.pdf"),
