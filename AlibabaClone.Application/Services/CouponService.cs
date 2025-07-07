@@ -4,7 +4,6 @@ using AlibabaClone.Application.Result;
 using AlibabaClone.Domain.Aggregates.TransactionAggregates;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
-using AutoMapper.Internal.Mappers;
 
 namespace AlibabaClone.Application.Services
 {
@@ -24,15 +23,14 @@ namespace AlibabaClone.Application.Services
             {
                 return Result<DiscountDto>.Error("Account Not Found");
             }
-            Coupon coupon = new Coupon();
+            Coupon? coupon = new Coupon();
             try
             {
                 coupon = await _couponRepository.GetByCodeAsync(dto.Code);
             }
             catch(Exception ex)
             {
-                string s = ex.Message;
-                string a = "";
+                Console.Write(ex.ToString());   
             }
             if (coupon == null)
             {

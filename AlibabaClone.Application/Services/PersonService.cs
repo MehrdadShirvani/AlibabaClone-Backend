@@ -30,7 +30,7 @@ namespace AlibabaClone.Application.Services
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) return Result<long>.Error("Account not found");
-            Person person;
+            Person? person;
             if (account.PersonId.HasValue)
             {
                 person = await _personRepository.GetByIdAsync(account.PersonId.Value);

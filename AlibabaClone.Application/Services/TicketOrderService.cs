@@ -73,15 +73,16 @@ namespace AlibabaClone.Application.Services
             if (!string.IsNullOrEmpty(seatCheck)) return Result<long>.Error(seatCheck);
             var finalAmount = baseAmount;
             long? couponId = null;
-            if(!string.IsNullOrEmpty(dto.CouponCode))
+            if (!string.IsNullOrEmpty(dto.CouponCode))
             {
                 var couponCheck = await _couponService.ValidateCouponAsync(accountId, new CouponValidationRequestDto { Code = dto.CouponCode, OriginalPrice = baseAmount });
-                if(couponCheck.IsSuccess == false || (couponCheck.Data?.IsValid ?? false) == false)
+                var coupon = await _couponRepository.GetByCodeAsync(dto.CouponCode);
+                if (couponCheck.IsSuccess == false || (couponCheck.Data?.IsValid ?? false) == false || coupon == null)
                 {
-                    return Result<long>.Error("Coupon code not valid");
+                    return Result<long>.Error("Coupon code is not valid");
                 }
+                couponId = coupon.Id;
                 finalAmount = baseAmount - couponCheck.Data.DiscountAmount;
-                couponId = (await _couponRepository.GetByCodeAsync(dto.CouponCode)).Id;
             }
 
             await AssignSeatsIfDynamic(transportation.VehicleId, dto.Travelers);

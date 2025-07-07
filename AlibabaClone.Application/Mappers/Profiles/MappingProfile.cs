@@ -86,7 +86,7 @@ namespace AlibabaClone.Application.Mappers.Profiles
             CreateMap<Seat, TransportationSeatDto>()
                         .ForMember(dest => dest.IsReserved, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1)))
                         .ForMember(dest => dest.GenderId, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1) ?
-                        src.Tickets.FirstOrDefault(x => x.TicketStatusId == 1).Traveler.GenderId : (short?)null));
+                        src.Tickets.First(x => x.TicketStatusId == 1).Traveler.GenderId : (short?)null));
 
             CreateMap<CreateTravelerTicketDto, PersonDto>();
 
