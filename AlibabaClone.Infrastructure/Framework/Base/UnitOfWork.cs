@@ -1,11 +1,4 @@
 ﻿using AlibabaClone.Domain.Framework.Interfaces;
-using AlibabaClone.Domain.Framework.Interfaces.Repositories;
-using AlibabaClone.Infrastructure.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AlibabaClone.Infrastructure.Framework.Base
 {

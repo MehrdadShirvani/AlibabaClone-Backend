@@ -5,6 +5,6 @@ namespace AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationRe
     public interface ITicketOrderRepository : IRepository<TicketOrder, long>
     {
         Task<List<TicketOrder>> GetAllByBuyerId(long buyerId);
-        Task<TicketOrder> FindAndLoadAllDetails(long id);
+        Task<TicketOrder?> FindAndLoadAllDetails(long id);
     }
 }

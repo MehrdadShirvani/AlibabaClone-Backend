@@ -35,8 +35,6 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-
-
             builder.Ignore(t => t.RemainingCapacity);
 
             builder.Property(t => t.BasePrice)
