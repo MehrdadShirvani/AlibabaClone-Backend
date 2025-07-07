@@ -30,6 +30,7 @@ namespace AlibabaClone.Application.Services
         private readonly ICouponService _couponService;
         private readonly IPdfGenerator _pdfGeneratorService;
         private readonly IMapper _mapper;
+        private readonly ITransportationLockService _transportationLockService;
         public TicketOrderService(ITicketOrderRepository ticketOrderRepository,
                                   ITicketRepository ticketRepository,
                                   IUnitOfWork unitOfWork,
@@ -43,7 +44,8 @@ namespace AlibabaClone.Application.Services
                                   IAccountService accountService,
                                   IPdfGenerator pdfGeneratorService,
                                   ICouponService couponService,
-                                  ICouponRepository couponRepository)
+                                  ICouponRepository couponRepository,
+                                  ITransportationLockService transportationLockService)
         {
             _ticketOrderRepository = ticketOrderRepository;
             _ticketRepository = ticketRepository;
@@ -59,6 +61,7 @@ namespace AlibabaClone.Application.Services
             _pdfGeneratorService = pdfGeneratorService;
             _couponService = couponService;
             _couponRepository = couponRepository;
+            _transportationLockService = transportationLockService;
         }
         public async Task<Result<long>> CreateTicketOrderAsync(long accountId, CreateTicketOrderDto dto)
         {
@@ -67,59 +70,63 @@ namespace AlibabaClone.Application.Services
 
             var transportation = await _transportationRepository.GetByIdAsync(dto.TransportationId);
             if (transportation == null) return Result<long>.Error("Transportation not found");
-            var baseAmount = transportation.BasePrice * dto.Travelers.Count;
-            if (account.CurrentBalance < baseAmount) return Result<long>.Error("Not enough money");
-            var seatCheck = ValidateTransportationAndSeats(transportation, dto.Travelers);
-            if (!string.IsNullOrEmpty(seatCheck)) return Result<long>.Error(seatCheck);
-            var finalAmount = baseAmount;
-            long? couponId = null;
-            if (!string.IsNullOrEmpty(dto.CouponCode))
+
+            using (await _transportationLockService.AcquireLockAsync(dto.TransportationId))
             {
-                var couponCheck = await _couponService.ValidateCouponAsync(accountId, new CouponValidationRequestDto { Code = dto.CouponCode, OriginalPrice = baseAmount });
-                var coupon = await _couponRepository.GetByCodeAsync(dto.CouponCode);
-                if (couponCheck.IsSuccess == false || (couponCheck.Data?.IsValid ?? false) == false || coupon == null)
+                var baseAmount = transportation.BasePrice * dto.Travelers.Count;
+                if (account.CurrentBalance < baseAmount) return Result<long>.Error("Not enough money");
+                var seatCheck = ValidateTransportationAndSeats(transportation, dto.Travelers);
+                if (!string.IsNullOrEmpty(seatCheck)) return Result<long>.Error(seatCheck);
+                var finalAmount = baseAmount;
+                long? couponId = null;
+                if (!string.IsNullOrEmpty(dto.CouponCode))
                 {
-                    return Result<long>.Error("Coupon code is not valid");
+                    var couponCheck = await _couponService.ValidateCouponAsync(accountId, new CouponValidationRequestDto { Code = dto.CouponCode, OriginalPrice = baseAmount });
+                    var coupon = await _couponRepository.GetByCodeAsync(dto.CouponCode);
+                    if (couponCheck.IsSuccess == false || (couponCheck.Data?.IsValid ?? false) == false || coupon == null)
+                    {
+                        return Result<long>.Error("Coupon code is not valid");
+                    }
+                    couponId = coupon.Id;
+                    finalAmount = baseAmount - couponCheck.Data.DiscountAmount;
                 }
-                couponId = coupon.Id;
-                finalAmount = baseAmount - couponCheck.Data.DiscountAmount;
-            }
 
-            await AssignSeatsIfDynamic(transportation.VehicleId, dto.Travelers);
-            await UpsertTravelers(account.Id, dto.Travelers);
+                await AssignSeatsIfDynamic(transportation.VehicleId, dto.Travelers);
+                await UpsertTravelers(account.Id, dto.Travelers);
 
-            var ticketOrder = new TicketOrder
-            {
-                BuyerId = account.Id,
-                CreatedAt = DateTime.UtcNow,
-                Description = "",
-                SerialNumber = Guid.NewGuid().ToString("N"),
-                TransportationId = dto.TransportationId,
-            };
-            await _ticketOrderRepository.AddAsync(ticketOrder);
-
-            foreach (var traveler in dto.Travelers)
-            {
-                if(traveler.SeatId.HasValue == false)
+                var ticketOrder = new TicketOrder
                 {
-                    return Result<long>.Error("Something went wrong");
-                }
-                var ticket = new Ticket
-                {
+                    BuyerId = account.Id,
                     CreatedAt = DateTime.UtcNow,
-                    Description = traveler.Description,
-                    SeatId = traveler.SeatId.Value,
+                    Description = "",
                     SerialNumber = Guid.NewGuid().ToString("N"),
-                    TicketOrder = ticketOrder,
-                    TicketStatusId = 1,
-                    TravelerId = traveler.Id,
+                    TransportationId = dto.TransportationId,
                 };
-                await _ticketRepository.AddAsync(ticket);
-            }
+                await _ticketOrderRepository.AddAsync(ticketOrder);
 
-            await _unitOfWork.SaveChangesAsync();
-            await _accountService.PayForTicketOrderAsync(account.Id, ticketOrder.Id, baseAmount, finalAmount, couponId);
-            return Result<long>.Success(ticketOrder.Id);
+                foreach (var traveler in dto.Travelers)
+                {
+                    if (traveler.SeatId.HasValue == false)
+                    {
+                        return Result<long>.Error("Something went wrong");
+                    }
+                    var ticket = new Ticket
+                    {
+                        CreatedAt = DateTime.UtcNow,
+                        Description = traveler.Description,
+                        SeatId = traveler.SeatId.Value,
+                        SerialNumber = Guid.NewGuid().ToString("N"),
+                        TicketOrder = ticketOrder,
+                        TicketStatusId = 1,
+                        TravelerId = traveler.Id,
+                    };
+                    await _ticketRepository.AddAsync(ticket);
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+                await _accountService.PayForTicketOrderAsync(account.Id, ticketOrder.Id, baseAmount, finalAmount, couponId);
+                return Result<long>.Success(ticketOrder.Id);
+            }
         }
 
 
@@ -145,9 +152,9 @@ namespace AlibabaClone.Application.Services
             var allSeats = await _seatRepository.GetSeatsByVehicleId(vehicleId);
             var reservedSeats = allSeats.Where(x => x.Tickets.Any(y => y.TicketStatusId == (int)TicketStatusEnum.Reserved));
 
-            if (vehicleId == (int)VehicleTypeEnum.Bus) 
+            if (vehicleId == (int)VehicleTypeEnum.Bus)
             {
-                var seatIdsToReserve = travelers.Select(x => x.SeatId??0).ToList();
+                var seatIdsToReserve = travelers.Select(x => x.SeatId ?? 0).ToList();
                 if (seatIdsToReserve.Intersect(reservedSeats.Select(x => x.Id)).Any() || seatIdsToReserve.Any(x => x == 0))
                 {
                     throw new Exception();
