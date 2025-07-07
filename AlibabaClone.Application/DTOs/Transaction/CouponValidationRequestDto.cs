@@ -2,7 +2,7 @@
 {
     public class CouponValidationRequestDto
     {
-        public string Code { get; set; }
+        public required string Code { get; set; }
         public decimal OriginalPrice { get; set; }
     }
 }

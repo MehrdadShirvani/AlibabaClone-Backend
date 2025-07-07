@@ -7,6 +7,6 @@
         public required string Password { set; get; }
         public string? Email { get; set; }
         public long? PersonId { get; set; }
-        public List<string> Roles { get; set; }
+        public List<string> Roles { get; set; } = [];
     }
 }

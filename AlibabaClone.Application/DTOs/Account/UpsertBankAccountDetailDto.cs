@@ -2,8 +2,8 @@
 {
     public class UpsertBankAccountDetailDto
     {
-        public string? IBAN { get; set; }              // 24 digits
-        public string? CardNumber { get; set; }        // 16 digits, optional format xxxx-xxxx-xxxx-xxxx
+        public string? IBAN { get; set; }              
+        public string? CardNumber { get; set; }        
         public string? BankAccountNumber { get; set; }
     }
 }

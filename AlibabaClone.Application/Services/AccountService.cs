@@ -239,6 +239,7 @@ namespace AlibabaClone.Application.Services
                 SerialNumber = Guid.NewGuid().ToString("N"),
                 TicketOrderId = ticketOrderId,
                 TransactionTypeId = 2,
+                TransactionType = "",
                 CouponId = couponId,
             };
 
