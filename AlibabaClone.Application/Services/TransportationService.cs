@@ -55,10 +55,9 @@ namespace AlibabaClone.Application.Services
             var result = await _seatRepository.GetSeatsByVehicleId(transportation.VehicleId);
 
 
-            if (result == null || result.Any())
+            if (result == null || result.Count != 0)
             {
-                var transportationSeatDtos = _mapper.Map<List<TransportationSeatDto>>(result);
-                return Result<List<TransportationSeatDto>>.Success(transportationSeatDtos);
+                return Result<List<TransportationSeatDto>>.Success(_mapper.Map<List<TransportationSeatDto>>(result));
             }
 
             return Result<List<TransportationSeatDto>>.NotFound(null);

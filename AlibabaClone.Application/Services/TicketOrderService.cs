@@ -4,6 +4,7 @@ using AlibabaClone.Application.DTOs.Transportation;
 using AlibabaClone.Application.Interfaces;
 using AlibabaClone.Application.Result;
 using AlibabaClone.Domain.Aggregates.TransportationAggregates;
+using AlibabaClone.Domain.Enums;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
@@ -138,9 +139,9 @@ namespace AlibabaClone.Application.Services
         private async Task AssignSeatsIfDynamic(int vehicleId, List<CreateTravelerTicketDto> travelers)
         {
             var allSeats = await _seatRepository.GetSeatsByVehicleId(vehicleId);
-            var reservedSeats = allSeats.Where(x => x.Tickets.Any(y => y.TicketStatusId == 1));
+            var reservedSeats = allSeats.Where(x => x.Tickets.Any(y => y.TicketStatusId == (int)TicketStatusEnum.Reserved));
 
-            if (vehicleId == 1) 
+            if (vehicleId == (int)VehicleTypeEnum.Bus) 
             {
                 var seatIdsToReserve = travelers.Select(x => x.SeatId.Value).ToList();
                 if (seatIdsToReserve.Intersect(reservedSeats.Select(x => x.Id)).Any())
@@ -150,7 +151,7 @@ namespace AlibabaClone.Application.Services
             }
             else
             {
-                var freeSeats = allSeats.Where(x => x.Tickets.All(y => y.TicketStatusId != 1)).ToList();
+                var freeSeats = allSeats.Where(x => x.Tickets.All(y => y.TicketStatusId != (int)TicketStatusEnum.Reserved)).ToList();
                 int i = 0;
                 travelers.ForEach(x =>
                 {

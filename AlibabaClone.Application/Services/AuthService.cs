@@ -4,6 +4,7 @@ using AlibabaClone.Application.Interfaces;
 using AlibabaClone.Application.Result;
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
+using AlibabaClone.Domain.Enums;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.AccountRepositories;
 using AutoMapper;
@@ -42,7 +43,7 @@ namespace AlibabaClone.Application.Services
             {
                 PhoneNumber = request.PhoneNumber,
                 Password = PasswordHasher.HashPassword(request.Password),
-                Roles = new List<string> { "User" }
+                Roles = ["User"]
             };
 
             await _accountRepository.AddAsync(_mapper.Map<Account>(accountDto));
@@ -52,7 +53,7 @@ namespace AlibabaClone.Application.Services
             var accountRole = new AccountRole
             {
                 AccountId = account.Id,   
-                RoleId = 1 //TODO: make this better
+                RoleId = (int)RoleEnum.User
             };
 
             await _accountRepository.AddAccountRoleAsync(accountRole);
@@ -62,7 +63,7 @@ namespace AlibabaClone.Application.Services
             {
                 Id = account.Id,
                 PhoneNumber = accountDto.PhoneNumber,
-                Roles = new List<string> { "User"}, //TODO: make this better
+                Roles = [RoleEnum.User.ToString()],
             };
 
             return Result<AuthResponseDto>.Success(response);

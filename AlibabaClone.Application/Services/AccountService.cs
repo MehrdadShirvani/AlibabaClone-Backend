@@ -10,6 +10,7 @@ using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
+using AlibabaClone.Domain.Enums;
 
 namespace AlibabaClone.Application.Services
 {
@@ -236,8 +237,8 @@ namespace AlibabaClone.Application.Services
                 FinalAmount = finalAmount,
                 SerialNumber = Guid.NewGuid().ToString("N"),
                 TicketOrderId = ticketOrderId,
-                TransactionTypeId = 2,
-                TransactionType = "",
+                TransactionTypeId = (int)TransactionTypeEnum.Withdraw,
+                TransactionType = TransactionTypeEnum.Withdraw.ToString(),
                 CouponId = couponId,
             };
 
