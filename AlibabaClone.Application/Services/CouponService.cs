@@ -22,7 +22,7 @@ namespace AlibabaClone.Application.Services
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null) 
             {
-                return Result<DiscountDto>.Error(null, "Account Not Found");
+                return Result<DiscountDto>.Error("Account Not Found");
             }
             Coupon coupon = new Coupon();
             try

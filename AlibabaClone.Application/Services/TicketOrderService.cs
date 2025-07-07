@@ -63,14 +63,14 @@ namespace AlibabaClone.Application.Services
         public async Task<Result<long>> CreateTicketOrderAsync(long accountId, CreateTicketOrderDto dto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) return Result<long>.Error(0, "Account not found");
+            if (account == null) return Result<long>.Error("Account not found");
 
             var transportation = await _transportationRepository.GetByIdAsync(dto.TransportationId);
-            if (transportation == null) return Result<long>.Error(0, "Transportation not found");
+            if (transportation == null) return Result<long>.Error("Transportation not found");
             var baseAmount = transportation.BasePrice * dto.Travelers.Count;
-            if (account.CurrentBalance < baseAmount) return Result<long>.Error(0, "Not enough money");
+            if (account.CurrentBalance < baseAmount) return Result<long>.Error("Not enough money");
             var seatCheck = ValidateTransportationAndSeats(transportation, dto.Travelers);
-            if (!string.IsNullOrEmpty(seatCheck)) return Result<long>.Error(0, seatCheck);
+            if (!string.IsNullOrEmpty(seatCheck)) return Result<long>.Error(seatCheck);
             var finalAmount = baseAmount;
             long? couponId = null;
             if(!string.IsNullOrEmpty(dto.CouponCode))
@@ -78,7 +78,7 @@ namespace AlibabaClone.Application.Services
                 var couponCheck = await _couponService.ValidateCouponAsync(accountId, new CouponValidationRequestDto { Code = dto.CouponCode, OriginalPrice = baseAmount });
                 if(couponCheck.IsSuccess == false || (couponCheck.Data?.IsValid ?? false) == false)
                 {
-                    return Result<long>.Error(0, "Coupon code not valid");
+                    return Result<long>.Error("Coupon code not valid");
                 }
                 finalAmount = baseAmount - couponCheck.Data.DiscountAmount;
                 couponId = (await _couponRepository.GetByCodeAsync(dto.CouponCode)).Id;
@@ -171,11 +171,11 @@ namespace AlibabaClone.Application.Services
         public async Task<Result<byte[]>> GenerateTicketsPdfAsync(long accountId, long ticketOrderId)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) return Result<byte[]>.Error(null, "Account not found");
+            if (account == null) return Result<byte[]>.Error("Account not found");
 
             var ticketOrder = await _ticketOrderRepository.FindAndLoadAllDetails(ticketOrderId);
-            if (ticketOrder == null) return Result<byte[]>.Error(null, "Transportation not found");
-            if (ticketOrder.BuyerId != accountId) return Result<byte[]>.Error(null, "Wrong Transportation");
+            if (ticketOrder == null) return Result<byte[]>.Error("Transportation not found");
+            if (ticketOrder.BuyerId != accountId) return Result<byte[]>.Error("Wrong Transportation");
             var data = _pdfGeneratorService.GenerateTicketsPdf(ticketOrder);
             return Result<byte[]>.Success(data);
         }

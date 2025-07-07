@@ -29,12 +29,12 @@ namespace AlibabaClone.Application.Services
         public async Task<Result<long>> UpsertAccountPersonAsync(long accountId, PersonDto dto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) return Result<long>.Error(0, "Account not found");
+            if (account == null) return Result<long>.Error("Account not found");
             Person person;
             if (account.PersonId.HasValue)
             {
                 person = await _personRepository.GetByIdAsync(account.PersonId.Value);
-                if (person == null) return Result<long>.Error(0, "Person not found");
+                if (person == null) return Result<long>.Error("Person not found");
                 _mapper.Map(dto, person);
                 person.CreatorAccountId = account.Id;
                 person.Id = account.PersonId.Value;
@@ -59,7 +59,7 @@ namespace AlibabaClone.Application.Services
         public async Task<Result<long>> UpsertPersonAsync(long accountId, PersonDto dto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) return Result<long>.Error(0, "Account not found");
+            if (account == null) return Result<long>.Error("Account not found");
 
 
             Person person;
@@ -68,7 +68,7 @@ namespace AlibabaClone.Application.Services
             {
                 if (dto.Id > 0 && dto.Id != person.Id)
                 {
-                    return Result<long>.Error(0, "A person with this id number exists");
+                    return Result<long>.Error("A person with this id number exists");
                 }
                 _mapper.Map(dto, person);
                 person.CreatorAccountId = account.Id;

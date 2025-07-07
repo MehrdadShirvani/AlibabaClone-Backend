@@ -30,12 +30,12 @@ namespace AlibabaClone.Application.Services
             var existing = await _accountRepository.GetByPhoneNumberAsync(request.PhoneNumber);
             if (existing != null)
             {
-                return Result<AuthResponseDto>.Error(null, "Phone number is already registered");
+                return Result<AuthResponseDto>.Error("Phone number is already registered");
             }
 
             if (!IsPasswordStrong(request.Password))
             {
-                return Result<AuthResponseDto>.Error(null, "Password must be at least 8 characters and include both digits and letters.");
+                return Result<AuthResponseDto>.Error("Password must be at least 8 characters and include both digits and letters.");
             }
 
             var accountDto = new AccountDto
@@ -73,12 +73,12 @@ namespace AlibabaClone.Application.Services
             var accountDto = _mapper.Map<AccountDto>(await _accountRepository.GetByPhoneNumberAsync(request.PhoneNumber));
             if (accountDto == null)
             {
-                return Result<AuthResponseDto>.Error(null, "Invalid phone number or password.");
+                return Result<AuthResponseDto>.Error("Invalid phone number or password.");
             }
 
             if (!PasswordHasher.VerifyPassword(request.Password, accountDto.Password))
             {
-                return Result<AuthResponseDto>.Error(null, "Invalid phone number or password.");
+                return Result<AuthResponseDto>.Error("Invalid phone number or password.");
             }
 
 
