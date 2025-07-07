@@ -1,11 +1,4 @@
-﻿using AlibabaClone.Application.DTOs.Transportation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AlibabaClone.Application.Result
+﻿namespace AlibabaClone.Application.Result
 {
     public class Result<T>
     {

@@ -10,8 +10,6 @@ using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
-using AlibabaClone.Domain.Aggregates.TransactionAggregates;
-using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 
 namespace AlibabaClone.Application.Services
 {

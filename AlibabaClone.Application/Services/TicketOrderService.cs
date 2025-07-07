@@ -15,21 +15,20 @@ namespace AlibabaClone.Application.Services
 {
     public class TicketOrderService : ITicketOrderService
     {
-        ITicketOrderRepository _ticketOrderRepository;
-        IAccountRepository _accountRepository;
-        IPersonRepository _personRepository;
-        ITicketRepository _ticketRepository;
-        ITransportationRepository _transportationRepository;
-        ISeatRepository _seatRepository;
-        ICouponRepository _couponRepository;
-        IUnitOfWork _unitOfWork;
-        IPersonService _personService;
-        ITransactionService _transactionService;
-        IAccountService _accountService;
-        ICouponService _couponService;
-        IPdfGenerator _pdfGeneratorService;
-
-        IMapper _mapper;
+        private readonly ITicketOrderRepository _ticketOrderRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly ITicketRepository _ticketRepository;
+        private readonly ITransportationRepository _transportationRepository;
+        private readonly ISeatRepository _seatRepository;
+        private readonly ICouponRepository _couponRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPersonService _personService;
+        private readonly ITransactionService _transactionService;
+        private readonly IAccountService _accountService;
+        private readonly ICouponService _couponService;
+        private readonly IPdfGenerator _pdfGeneratorService;
+        private readonly IMapper _mapper;
         public TicketOrderService(ITicketOrderRepository ticketOrderRepository,
                                   ITicketRepository ticketRepository,
                                   IUnitOfWork unitOfWork,
