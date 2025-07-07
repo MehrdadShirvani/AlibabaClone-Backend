@@ -62,7 +62,7 @@ namespace AlibabaClone.Application.Services
             if (account == null) return Result<long>.Error("Account not found");
 
 
-            Person person;
+            Person? person;
             person = (await _personRepository.FindAsync(x => x.IdNumber == dto.IdNumber && x.CreatorAccountId == accountId)).FirstOrDefault();
             if (person != null)
             {
