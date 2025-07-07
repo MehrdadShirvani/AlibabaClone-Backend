@@ -100,6 +100,10 @@ namespace AlibabaClone.Application.Services
 
             foreach (var traveler in dto.Travelers)
             {
+                if(traveler.SeatId.HasValue == false)
+                {
+                    return Result<long>.Error("Something went wrong");
+                }
                 var ticket = new Ticket
                 {
                     CreatedAt = DateTime.UtcNow,
@@ -143,8 +147,8 @@ namespace AlibabaClone.Application.Services
 
             if (vehicleId == (int)VehicleTypeEnum.Bus) 
             {
-                var seatIdsToReserve = travelers.Select(x => x.SeatId.Value).ToList();
-                if (seatIdsToReserve.Intersect(reservedSeats.Select(x => x.Id)).Any())
+                var seatIdsToReserve = travelers.Select(x => x.SeatId??0).ToList();
+                if (seatIdsToReserve.Intersect(reservedSeats.Select(x => x.Id)).Any() || seatIdsToReserve.Any(x => x == 0))
                 {
                     throw new Exception();
                 }
