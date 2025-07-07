@@ -1,5 +1,4 @@
-﻿using AlibabaClone.Domain.Aggregates.AccountAggregates;
-using AlibabaClone.Domain.Aggregates.TransactionAggregates;
+﻿using AlibabaClone.Domain.Aggregates.TransactionAggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,7 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
         {
             builder.HasKey(g => g.Id);
             builder.Property(g => g.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedNever();
 
             builder.Property(g => g.Title)
                 .IsRequired()
