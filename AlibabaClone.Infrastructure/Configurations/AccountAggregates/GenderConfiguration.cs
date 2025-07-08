@@ -10,7 +10,7 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
         {
             builder.HasKey(g => g.Id);
             builder.Property(g => g.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedNever();
 
             builder.Property(g => g.Title)
                 .IsRequired()

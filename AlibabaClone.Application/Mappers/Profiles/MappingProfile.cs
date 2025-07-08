@@ -7,6 +7,7 @@ using AlibabaClone.Domain.Aggregates.LocationAggregates;
 using AlibabaClone.Domain.Aggregates.TransactionAggregates;
 using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 using AlibabaClone.Domain.Aggregates.VehicleAggregates;
+using AlibabaClone.Domain.Enums;
 using AutoMapper;
 
 namespace AlibabaClone.Application.Mappers.Profiles
@@ -84,9 +85,9 @@ namespace AlibabaClone.Application.Mappers.Profiles
             CreateMap<TransactionDto, Transaction>();
 
             CreateMap<Seat, TransportationSeatDto>()
-                        .ForMember(dest => dest.IsReserved, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1)))
-                        .ForMember(dest => dest.GenderId, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == 1) ?
-                        src.Tickets.FirstOrDefault(x => x.TicketStatusId == 1).Traveler.GenderId : (short?)null));
+                        .ForMember(dest => dest.IsReserved, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == (int)TicketStatusEnum.Reserved)))
+                        .ForMember(dest => dest.GenderId, opt => opt.MapFrom(src => src.Tickets.Any(x => x.TicketStatusId == (int)TicketStatusEnum.Reserved) ?
+                        src.Tickets.First(x => x.TicketStatusId == (int)TicketStatusEnum.Reserved).Traveler.GenderId : (short?)null));
 
             CreateMap<CreateTravelerTicketDto, PersonDto>();
 

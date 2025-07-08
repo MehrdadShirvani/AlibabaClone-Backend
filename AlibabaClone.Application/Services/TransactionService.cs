@@ -2,6 +2,7 @@
 using AlibabaClone.Application.Interfaces;
 using AlibabaClone.Application.Result;
 using AlibabaClone.Domain.Aggregates.TransactionAggregates;
+using AlibabaClone.Domain.Enums;
 using AlibabaClone.Domain.Framework.Interfaces;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AutoMapper;
@@ -40,7 +41,7 @@ namespace AlibabaClone.Application.Services
                 BaseAmount = amount,
                 FinalAmount = amount,
                 SerialNumber = Guid.NewGuid().ToString("N"),
-                TransactionTypeId = 1,
+                TransactionTypeId = (int)TransactionTypeEnum.Deposit,
                 CouponId = null,
                 TicketOrderId = null,
             };

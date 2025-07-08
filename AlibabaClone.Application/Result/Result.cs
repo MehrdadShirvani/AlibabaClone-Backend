@@ -1,11 +1,4 @@
-﻿using AlibabaClone.Application.DTOs.Transportation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AlibabaClone.Application.Result
+﻿namespace AlibabaClone.Application.Result
 {
     public class Result<T>
     {
@@ -14,9 +7,19 @@ namespace AlibabaClone.Application.Result
         public T? Data { get; set; }
         public bool IsSuccess => Status == ResultStatus.Success;
 
-        public static Result<T> Success(T data) => new() { Status = ResultStatus.Success, Data = data };
-        public static Result<T> Error(T data, string errorMessage) => new() { Status = ResultStatus.Error, Data = data, ErrorMessage = errorMessage };
-        public static Result<T> NotFound(T data) => new() { Status = ResultStatus.NotFound, Data = data };
-        public static Result<T> Unauthorized(T data) => new() { Status = ResultStatus.Unauthorized, Data = data };
+        private Result(ResultStatus status, T? data = default, string? errorMessage = null)
+        {
+            Status = status;
+            Data = data;
+            ErrorMessage = errorMessage;
+        }
+        public static Result<T> Success(T data) =>
+        new(ResultStatus.Success, data);
+        public static Result<T> Error(string errorMessage) =>
+            new(ResultStatus.Error, default, errorMessage);
+        public static Result<T> NotFound(string? errorMessage = null) =>
+            new(ResultStatus.NotFound, default, errorMessage);
+        public static Result<T> Unauthorized(string? errorMessage = null) =>
+            new(ResultStatus.Unauthorized, default, errorMessage);
     }
 }

@@ -45,20 +45,19 @@ namespace AlibabaClone.Application.Services
                 return Result<IEnumerable<TransportationSearchResultDto>>.Success(transportationsDto);
             }
 
-            return Result<IEnumerable<TransportationSearchResultDto>>.NotFound(null);
+            return Result<IEnumerable<TransportationSearchResultDto>>.NotFound();
         }
 
         public async Task<Result<List<TransportationSeatDto>>> GetTransportationSeatsAsync(long transportationId)
         {
             var transportation = await _transportationRepository.GetByIdAsync(transportationId);
-            if (transportation == null) return Result<List<TransportationSeatDto>>.Error(null, "Transportation Not Found");
+            if (transportation == null) return Result<List<TransportationSeatDto>>.Error("Transportation Not Found");
             var result = await _seatRepository.GetSeatsByVehicleId(transportation.VehicleId);
 
 
-            if (result == null || result.Any())
+            if (result == null || result.Count != 0)
             {
-                var transportationSeatDtos = _mapper.Map<List<TransportationSeatDto>>(result);
-                return Result<List<TransportationSeatDto>>.Success(transportationSeatDtos);
+                return Result<List<TransportationSeatDto>>.Success(_mapper.Map<List<TransportationSeatDto>>(result));
             }
 
             return Result<List<TransportationSeatDto>>.NotFound(null);

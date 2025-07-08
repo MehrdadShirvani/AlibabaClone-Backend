@@ -14,7 +14,7 @@ namespace AlibabaClone.Infrastructure.Services.AccountAggregates
 
         }
 
-        public async Task<BankAccountDetail> GetByAccountIdAsync(long accountId)
+        public async Task<BankAccountDetail?> GetByAccountIdAsync(long accountId)
         {
             return await DBSet.FirstOrDefaultAsync(x => x.AccountId == accountId);
         }

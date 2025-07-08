@@ -10,8 +10,7 @@ using AlibabaClone.Application.DTOs.Transaction;
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransactionRepositories;
 using AlibabaClone.Application.Utils;
 using AlibabaClone.Domain.Aggregates.AccountAggregates;
-using AlibabaClone.Domain.Aggregates.TransactionAggregates;
-using AlibabaClone.Domain.Aggregates.TransportationAggregates;
+using AlibabaClone.Domain.Enums;
 
 namespace AlibabaClone.Application.Services
 {
@@ -106,7 +105,7 @@ namespace AlibabaClone.Application.Services
             {
                 if (accountByNewEmail.Id != accountId)
                 {
-                    return Result<long>.Error(account.Id, "Email is used by another account");
+                    return Result<long>.Error("Email is used by another account");
                 }
                 else
                 {
@@ -127,12 +126,12 @@ namespace AlibabaClone.Application.Services
             if (account == null) throw new Exception("Account not found");
             if (!PasswordHasher.VerifyPassword(oldPassword, account.Password))
             {
-                return Result<long>.Error(0, "Invalid password.");
+                return Result<long>.Error("Invalid password.");
             }
 
             if (!IsPasswordStrong(newPassword))
             {
-                return Result<long>.Error(0, "New Password must be at least 8 characters and include both digits and letters.");
+                return Result<long>.Error("New Password must be at least 8 characters and include both digits and letters.");
             }
 
             account.Password = PasswordHasher.HashPassword(newPassword);
@@ -156,7 +155,7 @@ namespace AlibabaClone.Application.Services
             var error = ValidateBankInfo(dto);
             if (string.IsNullOrEmpty(error) == false)
             {
-                return Result<long>.Error(0, error);
+                return Result<long>.Error(error);
             }
 
             var detail = await _bankAccountDetailRepository.GetByAccountIdAsync(accountId);
@@ -213,7 +212,7 @@ namespace AlibabaClone.Application.Services
         public async Task<Result<long>> TopUpAccount(long accountId, TopUpDto topUpDto)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) return Result<long>.Error(0, "Account not found");
+            if (account == null) return Result<long>.Error("Account not found");
             account.Deposit(topUpDto.Amount);
             _accountRepository.Update(account);
             await _unitOfWork.SaveChangesAsync();
@@ -224,8 +223,8 @@ namespace AlibabaClone.Application.Services
         public async Task<Result<long>> PayForTicketOrderAsync(long accountId, long ticketOrderId, decimal baseAmount, decimal finalAmount, long? couponId)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null) return Result<long>.Error(0, "Account not found");
-            if (account.CurrentBalance < finalAmount) return Result<long>.Error(0, "Not enough money");
+            if (account == null) return Result<long>.Error("Account not found");
+            if (account.CurrentBalance < finalAmount) return Result<long>.Error("Not enough money");
             account.Withdraw(finalAmount);
             _accountRepository.Update(account);
             await _unitOfWork.SaveChangesAsync();
@@ -238,7 +237,8 @@ namespace AlibabaClone.Application.Services
                 FinalAmount = finalAmount,
                 SerialNumber = Guid.NewGuid().ToString("N"),
                 TicketOrderId = ticketOrderId,
-                TransactionTypeId = 2,
+                TransactionTypeId = (int)TransactionTypeEnum.Withdraw,
+                TransactionType = TransactionTypeEnum.Withdraw.ToString(),
                 CouponId = couponId,
             };
 

@@ -23,7 +23,7 @@ namespace AlibabaClone.WebAPI.Controllers
         {
             var result = await _authService.RegisterAsync(request);
 
-            if (!result.IsSuccess)
+            if (!result.IsSuccess || result.Data == null)
                 return BadRequest(result.ErrorMessage);
 
             var token = _jwtGenerator.GenerateToken(result.Data);

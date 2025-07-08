@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AlibabaClone.Application.DTOs.Account
 {
     public class EditEmailDto
     {
-        [EmailAddress(ErrorMessage = "Email is not valid")]
-        public string NewEmail { get; set; }
+        [Required, EmailAddress(ErrorMessage = "Email is not valid")]
+        public required string NewEmail { get; set; }
     }
 }

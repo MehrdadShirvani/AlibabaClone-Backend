@@ -6,7 +6,7 @@ namespace AlibabaClone.Domain.Aggregates.TransactionAggregates
     {
         public string Code { get; set; } 
         public decimal MaxDiscountAmount { get; set; }           
-        public decimal? DiscountPercentage { get; set; }      // percentage-based
+        public decimal? DiscountPercentage { get; set; }      
         public DateTime ExpiryDate { get; set; }
         public int MaxUsages { get; set; }               
         public int MaxUsagesPerAccount { get; set; }        

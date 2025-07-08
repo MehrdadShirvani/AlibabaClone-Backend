@@ -14,7 +14,7 @@ namespace AlibabaClone.Infrastructure.Services.TransportationAggregates
         
         }
 
-        public async Task<TicketOrder> FindAndLoadAllDetails(long id)
+        public async Task<TicketOrder?> FindAndLoadAllDetails(long id)
         {
             return await DBSet.Include(x => x.Transaction)
                        .Include(x => x.Transportation).ThenInclude(x => x.FromLocation).ThenInclude(x => x.City)
