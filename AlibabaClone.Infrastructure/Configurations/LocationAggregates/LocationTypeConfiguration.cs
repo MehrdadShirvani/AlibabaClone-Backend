@@ -20,14 +20,6 @@ namespace AlibabaClone.Infrastructure.Configurations.LocationAggregates
             builder.HasIndex(c => c.Title)
                 .IsUnique();
 
-            //Seed Data
-            builder.HasData(
-                new LocationType { Id = 1, Title = "BusTerminal" },
-                new LocationType { Id = 2, Title = "TrainStation" },
-                new LocationType { Id = 3, Title = "Airport" },
-                new LocationType { Id = 4, Title = "Seaport" },
-                new LocationType { Id = 5, Title = "MetroStation" }
-            );
         }
     }
 }

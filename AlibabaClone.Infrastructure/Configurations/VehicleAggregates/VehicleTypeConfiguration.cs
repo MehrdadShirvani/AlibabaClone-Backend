@@ -22,14 +22,6 @@ namespace AlibabaClone.Infrastructure.Configurations.VehicleAggregates
             builder.HasIndex(c => c.Title)
                 .IsUnique();
 
-            //Seed Data
-            builder.HasData(
-                new VehicleType { Id = 1, Title = "Bus" },
-                new VehicleType { Id = 2, Title = "Train" },
-                new VehicleType { Id = 3, Title = "Airplane" },
-                new VehicleType { Id = 4, Title = "Ship" },
-                new VehicleType { Id = 5, Title = "Metro" }
-            );
         }
     }
 }

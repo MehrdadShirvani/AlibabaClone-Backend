@@ -19,11 +19,6 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
             builder.HasIndex(r => r.Title)
                 .IsUnique();
 
-            //Seed Data
-            builder.HasData(
-                new Role { Id = 1, Title = "User" },
-                new Role { Id = 2, Title = "Admin" }
-            );
         }
     }
 }

@@ -64,7 +64,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[PersonId] IS NOT NULL");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.AccountAggregates.AccountRole", b =>
@@ -79,7 +79,7 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("AccountRoles");
+                    b.ToTable("AccountRoles", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.AccountAggregates.BankAccountDetail", b =>
@@ -118,13 +118,16 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("AccountId")
                         .IsUnique();
 
-                    b.ToTable("BankAccountDetails");
+                    b.ToTable("BankAccountDetails", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.AccountAggregates.Gender", b =>
                 {
                     b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -136,19 +139,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Genders");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = (short)1,
-                            Title = "Female"
-                        },
-                        new
-                        {
-                            Id = (short)2,
-                            Title = "Male"
-                        });
+                    b.ToTable("Genders", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.AccountAggregates.Person", b =>
@@ -210,13 +201,16 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("GenderId");
 
-                    b.ToTable("People");
+                    b.ToTable("People", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.AccountAggregates.Role", b =>
                 {
                     b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -228,19 +222,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = (short)1,
-                            Title = "User"
-                        },
-                        new
-                        {
-                            Id = (short)2,
-                            Title = "Admin"
-                        });
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.CompanyAggregates.Company", b =>
@@ -261,7 +243,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.LocationAggregates.City", b =>
@@ -282,7 +264,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.LocationAggregates.Location", b =>
@@ -310,13 +292,16 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("LocationTypeId");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.LocationAggregates.LocationType", b =>
                 {
                     b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -328,34 +313,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("LocationTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = (short)1,
-                            Title = "BusTerminal"
-                        },
-                        new
-                        {
-                            Id = (short)2,
-                            Title = "TrainStation"
-                        },
-                        new
-                        {
-                            Id = (short)3,
-                            Title = "Airport"
-                        },
-                        new
-                        {
-                            Id = (short)4,
-                            Title = "Seaport"
-                        },
-                        new
-                        {
-                            Id = (short)5,
-                            Title = "MetroStation"
-                        });
+                    b.ToTable("LocationTypes", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.TransactionAggregates.Coupon", b =>
@@ -394,7 +352,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("Coupons");
+                    b.ToTable("Coupons", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.TransactionAggregates.Transaction", b =>
@@ -448,13 +406,16 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("TransactionTypeId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.TransactionAggregates.TransactionType", b =>
                 {
                     b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -466,19 +427,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("TransactionTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = (short)1,
-                            Title = "Deposit"
-                        },
-                        new
-                        {
-                            Id = (short)2,
-                            Title = "Withdraw"
-                        });
+                    b.ToTable("TransactionTypes", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.TransportationAggregates.Ticket", b =>
@@ -536,7 +485,7 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("TravelerId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.TransportationAggregates.TicketOrder", b =>
@@ -576,13 +525,16 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("TransportationId");
 
-                    b.ToTable("TicketOrders");
+                    b.ToTable("TicketOrders", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.TransportationAggregates.TicketStatus", b =>
                 {
                     b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -594,39 +546,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("TicketStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = (short)1,
-                            Title = "Reserved"
-                        },
-                        new
-                        {
-                            Id = (short)2,
-                            Title = "Paid"
-                        },
-                        new
-                        {
-                            Id = (short)3,
-                            Title = "CancelledByUser"
-                        },
-                        new
-                        {
-                            Id = (short)4,
-                            Title = "CancelledBySystem"
-                        },
-                        new
-                        {
-                            Id = (short)5,
-                            Title = "Used"
-                        },
-                        new
-                        {
-                            Id = (short)6,
-                            Title = "Expired"
-                        });
+                    b.ToTable("TicketStatuses", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.TransportationAggregates.Transportation", b =>
@@ -677,7 +597,7 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Transportations");
+                    b.ToTable("Transportations", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.VehicleAggregates.Seat", b =>
@@ -711,7 +631,7 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Seats");
+                    b.ToTable("Seats", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.VehicleAggregates.Vehicle", b =>
@@ -745,13 +665,16 @@ namespace AlibabaClone.Infrastructure.Migrations
 
                     b.HasIndex("VehicleTypeId");
 
-                    b.ToTable("Vehicles");
+                    b.ToTable("Vehicles", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.VehicleAggregates.VehicleType", b =>
                 {
                     b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -763,34 +686,7 @@ namespace AlibabaClone.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("VehicleTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = (short)1,
-                            Title = "Bus"
-                        },
-                        new
-                        {
-                            Id = (short)2,
-                            Title = "Train"
-                        },
-                        new
-                        {
-                            Id = (short)3,
-                            Title = "Airplane"
-                        },
-                        new
-                        {
-                            Id = (short)4,
-                            Title = "Ship"
-                        },
-                        new
-                        {
-                            Id = (short)5,
-                            Title = "Metro"
-                        });
+                    b.ToTable("VehicleTypes", (string)null);
                 });
 
             modelBuilder.Entity("AlibabaClone.Domain.Aggregates.AccountAggregates.Account", b =>

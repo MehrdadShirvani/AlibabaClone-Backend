@@ -19,15 +19,6 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
             builder.HasIndex(r => r.Title)
                 .IsUnique();
 
-            //Seed Data
-            builder.HasData(
-                new TicketStatus { Id = 1, Title = "Reserved"},
-                new TicketStatus { Id = 2, Title = "Paid"},
-                new TicketStatus { Id = 3, Title = "CancelledByUser"},
-                new TicketStatus { Id = 4, Title = "CancelledBySystem"},
-                new TicketStatus { Id = 5, Title = "Used"},
-                new TicketStatus { Id = 6, Title = "Expired" }
-            );
         }
     }
 }
