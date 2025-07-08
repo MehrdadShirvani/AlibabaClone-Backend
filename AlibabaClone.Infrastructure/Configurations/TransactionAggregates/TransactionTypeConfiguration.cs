@@ -11,7 +11,7 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
         {
             builder.HasKey(g => g.Id);
             builder.Property(g => g.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedOnAdd();
 
             builder.Property(g => g.Title)
                 .IsRequired()

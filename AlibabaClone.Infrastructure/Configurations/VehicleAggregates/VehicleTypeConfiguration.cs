@@ -13,7 +13,7 @@ namespace AlibabaClone.Infrastructure.Configurations.VehicleAggregates
         {
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedOnAdd();
 
             builder.Property(c => c.Title)
                 .IsRequired()

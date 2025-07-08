@@ -10,7 +10,7 @@ namespace AlibabaClone.Infrastructure.Configurations.TransportationAggregates
         {
             builder.HasKey(r => r.Id);
             builder.Property(r => r.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedOnAdd();
 
             builder.Property(r => r.Title)
                 .IsRequired()
