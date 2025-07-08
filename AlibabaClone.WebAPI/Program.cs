@@ -24,6 +24,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+DotNetEnv.Env.Load();
 QuestPDF.Settings.License = LicenseType.Community;
 // Add services to the container.
 
@@ -32,7 +33,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -79,8 +80,13 @@ builder.Services.AddScoped<IPdfGenerator, PdfGenerator>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<JwtSettings>(options =>
+{
+    options.Key = Environment.GetEnvironmentVariable("JWT_KEY");
+    options.Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+    options.Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+    options.ExpiryMinutes = int.Parse(Environment.GetEnvironmentVariable("JWT_EXPIRY_MINUTES") ?? "60");
+});
 
 //Extracting UserId from token
 builder.Services.AddHttpContextAccessor();
@@ -89,6 +95,13 @@ builder.Services.AddScoped<IUserContext, UserContext>();
 
 builder.Services.AddSingleton<ITransportationLockService, TransportationLockService>();
 
+JwtSettings jwtSettings = new JwtSettings
+{
+    Key = Environment.GetEnvironmentVariable("JWT_KEY"),
+    Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+    Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+    ExpiryMinutes = int.Parse(Environment.GetEnvironmentVariable("JWT_EXPIRY_MINUTES") ?? "60"),
+};
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -110,18 +123,16 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthorization();
 
-
+var corsOrigin = Environment.GetEnvironmentVariable("CORS_ORIGIN");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(corsOrigin)
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
 });
-
-
 
 
 var app = builder.Build();
@@ -135,8 +146,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
 
 app.UseAuthentication();
 app.UseAuthorization();
