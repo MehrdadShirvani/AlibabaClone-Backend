@@ -1,6 +1,9 @@
-﻿using AlibabaClone.Domain.Aggregates.VehicleAggregates;
+﻿using AlibabaClone.Domain.Aggregates.TransportationAggregates;
+using AlibabaClone.Domain.Aggregates.VehicleAggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 
 namespace AlibabaClone.Infrastructure.Configurations.VehicleAggregates
 {
@@ -18,6 +21,15 @@ namespace AlibabaClone.Infrastructure.Configurations.VehicleAggregates
 
             builder.HasIndex(c => c.Title)
                 .IsUnique();
+
+            //Seed Data
+            builder.HasData(
+                new VehicleType { Id = 1, Title = "Bus" },
+                new VehicleType { Id = 2, Title = "Train" },
+                new VehicleType { Id = 3, Title = "Airplane" },
+                new VehicleType { Id = 4, Title = "Ship" },
+                new VehicleType { Id = 5, Title = "Metro" }
+            );
         }
     }
 }

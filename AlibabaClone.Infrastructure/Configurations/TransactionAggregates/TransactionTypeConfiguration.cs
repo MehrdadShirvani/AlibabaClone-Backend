@@ -1,4 +1,5 @@
 ﻿using AlibabaClone.Domain.Aggregates.TransactionAggregates;
+using AlibabaClone.Domain.Aggregates.TransportationAggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,6 +19,12 @@ namespace AlibabaClone.Infrastructure.Configurations.TransactionAggregates
 
             builder.HasIndex(g => g.Title)
                 .IsUnique();
+
+            //Seed Data
+            builder.HasData(
+                new TransactionType { Id = 1, Title = "Deposit" },
+                new TransactionType { Id = 2, Title = "Withdraw" }
+            );
         }
     }
 }

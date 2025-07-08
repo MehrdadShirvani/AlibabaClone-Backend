@@ -18,6 +18,12 @@ namespace AlibabaClone.Infrastructure.Configurations.AccountAggregates
 
             builder.HasIndex(g => g.Title)
                 .IsUnique();
+
+            //Seed Data
+            builder.HasData(
+                new Gender { Id = 1, Title = "Female" },
+                new Gender { Id = 2, Title = "Male" }
+            );
         }
     }
 }
