@@ -10,6 +10,7 @@ using AlibabaClone.Domain.Framework.Interfaces.Repositories.TransportationReposi
 using AlibabaClone.Domain.Framework.Interfaces.Repositories.VehicleRepositories;
 using AlibabaClone.Infrastructure;
 using AlibabaClone.Infrastructure.Framework.Base;
+using AlibabaClone.Infrastructure.Seeders;
 using AlibabaClone.Infrastructure.Services;
 using AlibabaClone.Infrastructure.Services.AccountAggregates;
 using AlibabaClone.Infrastructure.Services.CompanyAggregates;
@@ -141,6 +142,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
     db.Database.Migrate();
+    await DBInitializer.SeedAsync(db);
 }
 
 app.UseCors("Frontend");
