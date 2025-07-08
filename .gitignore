@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /AlibabaClone.WebAPI/appsettings.Development.json
 /AlibabaClone.WebAPI/appsettings.json
+
+.env
+.env.*
