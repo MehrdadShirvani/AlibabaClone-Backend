@@ -2,9 +2,9 @@
 # Transportation Management App – Backend
 
 ## 📝About the Project
-[IMAGE]
 
-Welcome to the backend of the **Transportation Management App**, a robust and scalable system designed to manage travelers, routes, ticketing, and vehicle operations. This project is architected with **Clean Architecture** principles to ensure high modularity, testability, and long-term maintainability. This project is a clone of Alibaba.ir
+
+Welcome to the backend of the **Transportation Management App**, a robust and scalable system designed to manage travelers, routes, ticketing, and vehicle operations. This project is architected with **Clean Architecture** principles to ensure high modularity, testability, and long-term maintainability. This project is inspired by sites like Booking.com and Alibaba.ir
 
 💡 This backend is designed to work seamlessly with the [Transportation Management Frontend](https://github.com/MehrdadShirvani/AlibabaClone-Frontend), a React-based SPA that consumes the RESTful APIs exposed by this project.
 
@@ -44,7 +44,9 @@ Contains the **Enterprise Business Rules** – the core of the system. This laye
 - **Interfaces:** Contracts like `IEntity<TKey>`, `IRepository<T>`
     
 **Domain Modeling Details:**
-![ERD](./assets/ERD.png)
+
+![ERD](https://github.com/user-attachments/assets/4694eefe-470e-47ba-8197-caa1086abfe9)
+
 
 - ✅ ERD follows **Third Normal Form (3NF)** to avoid redundancy and ensure referential integrity.
 - ✅ Uses a **Code-First Approach**: database schema generated from C# model classes.
@@ -214,7 +216,6 @@ This app uses the **Repository Pattern** and **Unit of Work** to encapsulate dat
         - **Atomicity across multiple repositories**
 
 ### 4. **Presentation Layer (API)**
-[IMAAGE OF SWAGGER]
 
 **Description:**  
 This layer contains the **HTTP API** controllers that expose the application's features to clients like the React frontend, mobile apps, or third-party services.
@@ -371,10 +372,23 @@ This backend adheres to **RESTful design** principles for clarity, scalability, 
 ---
 ## 🚀 Getting Started
 
-Follow these steps to run the application locally after cloning or forking the project.
-### 1. Set Up the Connection String
+If you're planning to **test or contribute** to the project, make sure to:
 
-Configure your database connection string in `appsettings.json`:
+### 🔀 1. Switch to the `develop` Branch
+
+The `develop` branch contains the latest features and active work in progress.
+
+```bash
+git checkout develop
+```
+
+---
+
+### ⚙️ 2. Configure `appsettings.json`
+
+#### ✅ Add Database Connection
+
+Update your connection string in `appsettings.json`:
 
 ```json
 {
@@ -384,19 +398,35 @@ Configure your database connection string in `appsettings.json`:
 }
 ```
 
-Make sure the server, database, and credentials match your local or development environment.
+Make sure the values match your **local SQL Server** setup.
 
 ---
-### 2. Run Database Migrations
 
-If you’ve cloned or forked the repository and want to build the database schema:
-1. Open a terminal in the project root
-2. Run the following commands:
-    ```bash
-    dotnet ef migrations add InitialCreate
-    dotnet ef database update
-    ```
-This will create the schema in your SQL database based on the current domain models and configurations.
+#### 🔐 Add JWT Settings
+
+To enable JWT-based authentication, also include:
+
+```json
+"Jwt": {
+  "Key": "YOUR_SECRET_KEY_HERE",
+  "Issuer": "YOUR_APP_NAME_OR_DOMAIN",
+  "Audience": "MyAppUsers",
+  "ExpiryMinutes": 360
+}
+```
+
+---
+
+### 🗄️ 3. Run Database Migrations
+
+To create the schema and apply the current migrations:
+
+```bash
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
+
+✅ This sets up your SQL database using the current domain models and Entity Framework configuration.
 
 ---
 ## 🧪 Testing
