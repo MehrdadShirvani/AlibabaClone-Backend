@@ -11,13 +11,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03_DomainLayer", "03_Domain
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_InfrastuctureLayer", "04_InfrastuctureLayer", "{D03A34E8-261B-49E7-837D-6C962780B555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlibabaClone.WebAPI", "AlibabaClone.WebAPI\AlibabaClone.WebAPI.csproj", "{99B7BF97-219E-43FD-9D1E-068985130CE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlibabaClone.WebAPI", "AlibabaClone.WebAPI\AlibabaClone.WebAPI.csproj", "{99B7BF97-219E-43FD-9D1E-068985130CE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlibabaClone.Application", "AlibabaClone.Application\AlibabaClone.Application.csproj", "{6044CD3E-F03E-4225-B33A-94D5529F78FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlibabaClone.Application", "AlibabaClone.Application\AlibabaClone.Application.csproj", "{6044CD3E-F03E-4225-B33A-94D5529F78FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlibabaClone.Domain", "AlibabaClone.Domain\AlibabaClone.Domain.csproj", "{1518E091-8554-4CCA-9C40-512978AB99CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlibabaClone.Domain", "AlibabaClone.Domain\AlibabaClone.Domain.csproj", "{1518E091-8554-4CCA-9C40-512978AB99CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlibabaClone.Infrastructure", "AlibabaClone.Infrastructure\AlibabaClone.Infrastructure.csproj", "{B5D9431C-0202-419F-9085-03AD18FE1E57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlibabaClone.Infrastructure", "AlibabaClone.Infrastructure\AlibabaClone.Infrastructure.csproj", "{B5D9431C-0202-419F-9085-03AD18FE1E57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C9C732AB-BC18-4363-92F8-57BD1A963776}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
