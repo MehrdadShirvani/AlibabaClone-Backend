@@ -8,10 +8,6 @@ Welcome to the backend of the **Transportation Management App**, a robust and sc
 
 💡 This backend is designed to work seamlessly with the [Transportation Management Frontend](https://github.com/MehrdadShirvani/AlibabaClone-Frontend), a React-based SPA that consumes the RESTful APIs exposed by this project.
 
-🐦‍🔥 This project is part of the first initiative by **The Order of the Phoenix** — a student-led movement aimed at building a culture of self-driven learning, teamwork, and meaningful project development. What started as a grassroots .NET learning group evolved into a full-stack travel management system inspired by platforms like Alibaba.ir, built with clean architecture on the backend and a modern React frontend.
-
-🔗 For more information, and to explore the full documentation and creation process, visit: **[ASP.NET Project Documentation](https://theorderofphoenix.github.io/ASP.NET/)**  
-
 ---
 
 
@@ -479,6 +475,22 @@ We follow Clean Architecture not just in code but in our workflow. PRs should:
 ### Miscellaneous
 - **`QuestPDF`** (PDF generation library example used in project):  
     [QuestPDF GitHub](https://github.com/QuestPDF/QuestPDF-ExampleInvoice)
+
+---
+
+## 🐦‍🔥 Order of the Phoenix
+This project is part of the first initiative by **The Order of the Phoenix** — a student-led movement aimed at building a culture of self-driven learning, teamwork, and meaningful project development. What started as a grassroots .NET learning group evolved into a full-stack travel management system inspired by platforms like Alibaba.ir, built with clean architecture on the backend and a modern React frontend.
+
+ 🔗 For more information, and to explore the full documentation and creation process, visit: **[ASP.NET Project Documentation](https://theorderofphoenix.github.io/ASP.NET/)**  
+
+
+I should specially thank:
+
+[Amin Ghoorchian](https://github.com/AminGh05)
+
+[Ali Taherzadeh](https://github.com/AliThz)
+
+For their guidance, help and accompaniment.
 
 ---
 
